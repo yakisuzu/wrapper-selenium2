@@ -1,18 +1,18 @@
 package operators.wwwgooglecojp;
 
-import operators.supers.SuperOperators;
+import operators.supers.SuperOperator;
 import pages.wwwgooglecojp.WwwGoogleCoJpPage;
 
-public class WwwGoogleCoJpOperator extends SuperOperators<WwwGoogleCoJpPage> {
+public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 	public WwwGoogleCoJpOperator(WwwGoogleCoJpPage page) {
 		super(page);
 	}
 
 	public void clickLogin() {
-		getPage().spanLogin().click();
+		click(getPage().spanLogin());
 	}
 
 	public void clickGmail() {
-		getPage().spanGmail().click();
+		click(getPage().spanGmail());
 	}
 }
