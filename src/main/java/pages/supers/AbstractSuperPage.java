@@ -3,6 +3,7 @@ package pages.supers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import support.PageProperties;
 
 public abstract class AbstractSuperPage {
 
@@ -27,12 +28,8 @@ public abstract class AbstractSuperPage {
 		initializeSsl();
 	}
 
-	protected WebElement findTag(WebElement ele, String elementTag) {
-		return ele.findElement(By.tagName(elementTag));
-	}
-
-	protected WebElement findId(String elementId) {
-		return driver.findElement(By.id(elementId));
+	protected WebElement findXpath(String elementXpath) {
+		return driver.findElement(By.xpath(elementXpath));
 	}
 
 	public String getUrl() {
@@ -45,5 +42,9 @@ public abstract class AbstractSuperPage {
 
 	public void quit() {
 		driver.quit();
+	}
+
+	protected PageProperties getPageProperties() {
+		return PageProperties.getInstance();
 	}
 }
