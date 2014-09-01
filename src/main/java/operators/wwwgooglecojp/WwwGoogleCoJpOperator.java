@@ -1,6 +1,7 @@
 package operators.wwwgooglecojp;
 
 import operators.supers.SuperOperator;
+import org.openqa.selenium.Keys;
 import pages.wwwgooglecojp.WwwGoogleCoJpPage;
 
 public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
@@ -9,10 +10,10 @@ public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 	}
 
 	public void clickLogin() {
-		click(getPage().spanLogin());
+		getPage().spanLogin().sendKeys(Keys.ENTER);
 	}
 
 	public void clickGmail() {
-		click(getPage().spanGmail());
+		getPage().spanGmail().sendKeys(Keys.ENTER);
 	}
 }

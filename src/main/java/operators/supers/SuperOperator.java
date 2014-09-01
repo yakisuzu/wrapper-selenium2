@@ -1,7 +1,7 @@
 package operators.supers;
 
-import org.openqa.selenium.WebElement;
 import pages.supers.AbstractSuperPage;
+import support.PageProperties;
 
 public class SuperOperator<T extends AbstractSuperPage> {
 	private T page;
@@ -14,7 +14,7 @@ public class SuperOperator<T extends AbstractSuperPage> {
 		return page;
 	}
 
-	protected void click(WebElement ele) {
-		ele.sendKeys("¥n");
+	protected PageProperties getPageProperties() {
+		return PageProperties.getInstance();
 	}
 }

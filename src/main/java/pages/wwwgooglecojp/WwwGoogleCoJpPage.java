@@ -11,14 +11,14 @@ public class WwwGoogleCoJpPage extends AbstractSuperPage {
 
 	@Override
 	protected String initializeUrl() {
-		return "https://www.google.co.jp/";
+		return getPageProperties().getProperty("wwwgooglecojp.url");
 	}
 
 	public WebElement spanLogin() {
-		return findId("gbgs4");
+		return findXpath("//span(@id='gbgs4')");
 	}
 
 	public WebElement spanGmail() {
-		return findId("gb_23");
+		return findXpath("//span(@id='gb_23')");
 	}
 }
