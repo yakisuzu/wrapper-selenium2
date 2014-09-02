@@ -6,13 +6,12 @@ import java.util.Properties;
 
 public class PageProperties {
 	private static PageProperties instance = new PageProperties();
-	private static Properties prop = new Properties();
+	private Properties prop = new Properties();
 
 	private PageProperties() {
+		ClassLoader loader = this.getClass().getClassLoader();
+		InputStream is = loader.getResourceAsStream("page.properties");
 		try {
-			//todo
-			ClassLoader loader = this.getClass().getClassLoader();
-			InputStream is = loader.getResourceAsStream("page.properties");
 			prop.load(is);
 		} catch (IOException e) {
 			e.printStackTrace();
