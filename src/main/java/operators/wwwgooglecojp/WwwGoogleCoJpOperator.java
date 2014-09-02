@@ -10,11 +10,14 @@ public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 		super(page);
 	}
 
-	public void clickLogin() {
+	public void enterLogin(final String email, final String pass) {
 		execute(new FuncVoid() {
 			@Override
 			public void accept() {
 				getPage().aLogin().sendKeys(Keys.ENTER);
+				getPage().inputLoginEmail().sendKeys(email);
+				getPage().inputLoginPasswd().sendKeys(pass);
+				getPage().inputLoginBtn().sendKeys(Keys.ENTER);
 			}
 		});
 	}

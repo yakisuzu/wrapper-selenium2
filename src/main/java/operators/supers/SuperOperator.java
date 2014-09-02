@@ -15,6 +15,10 @@ public class SuperOperator<T extends AbstractSuperPage> {
 		return errorFlg;
 	}
 
+	public void quit() {
+		page.quit();
+	}
+
 	protected T getPage() {
 		return page;
 	}

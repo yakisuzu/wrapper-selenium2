@@ -22,4 +22,16 @@ public class WwwGoogleCoJpPage extends AbstractSuperPage {
 	public WebElement aGmail() {
 		return findXpath("//a[contains(@href,'https://accounts.google.com/ServiceLogin')]");
 	}
+
+	public WebElement inputLoginEmail() {
+		return findXpath("//input[@id='Email']");
+	}
+
+	public WebElement inputLoginPasswd() {
+		return findXpath("//input[@id='Passwd']");
+	}
+
+	public WebElement inputLoginBtn(){
+		return findXpath("//input[@id='signIn']");
+	}
 }
