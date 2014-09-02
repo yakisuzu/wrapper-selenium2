@@ -3,7 +3,6 @@ package pages.supers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import support.PageProperties;
 
 public abstract class AbstractSuperPage {
 
@@ -17,7 +16,7 @@ public abstract class AbstractSuperPage {
 
 	private void initializeSsl() {
 		// TODO conf ie
-		if (getUrl().matches("ref______")) {
+		if (getUrl().matches("refs://______")) {
 			driver.navigate().to("javascript:document.getElementById('overridelink').click()");
 		}
 	}
@@ -42,9 +41,5 @@ public abstract class AbstractSuperPage {
 
 	public void quit() {
 		driver.quit();
-	}
-
-	protected PageProperties getPageProperties() {
-		return PageProperties.getInstance();
 	}
 }

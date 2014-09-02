@@ -3,6 +3,7 @@ package pages.wwwgooglecojp;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import pages.supers.AbstractSuperPage;
+import support.PageProperties;
 
 public class WwwGoogleCoJpPage extends AbstractSuperPage {
 	public WwwGoogleCoJpPage(WebDriver driver) {
@@ -11,14 +12,14 @@ public class WwwGoogleCoJpPage extends AbstractSuperPage {
 
 	@Override
 	protected String initializeUrl() {
-		return getPageProperties().getProperty("wwwgooglecojp.url");
+		return PageProperties.getInstance().getProperty("wwwgooglecojp.url");
 	}
 
-	public WebElement spanLogin() {
-		return findXpath("//span(@id='gbgs4')");
+	public WebElement aLogin() {
+		return findXpath("//a[contains(@href,'https://mail.google.com/mail/')]");
 	}
 
-	public WebElement spanGmail() {
-		return findXpath("//span(@id='gb_23')");
+	public WebElement aGmail() {
+		return findXpath("//a[contains(@href,'https://accounts.google.com/ServiceLogin')]");
 	}
 }
