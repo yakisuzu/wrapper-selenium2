@@ -2,13 +2,11 @@ package features;
 
 import operators.wwwgooglecojp.WwwGoogleCoJpOperator;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.wwwgooglecojp.WwwGoogleCoJpPage;
 import support.PageProperties;
 
 public class WwwGoogleCoJpFeature {
-	public void login() {
-		WebDriver driver = new FirefoxDriver();
+	public static void login(WebDriver driver) {
 		WwwGoogleCoJpOperator ope = new WwwGoogleCoJpOperator(new WwwGoogleCoJpPage(driver));
 
 		String email = PageProperties.getInstance().getProperty("wwwgooglecojp.loginId");
