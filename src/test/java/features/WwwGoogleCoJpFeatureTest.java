@@ -2,12 +2,12 @@ package features;
 
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import support.Generic;
+import support.GenericUtils;
 
 public class WwwGoogleCoJpFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
-		for (WebDriver driver : Generic.getWebDriverList()) {
+		for (WebDriver driver : GenericUtils.getWebDriverList()) {
 			WwwGoogleCoJpFeature.login(driver);
 		}
 	}
