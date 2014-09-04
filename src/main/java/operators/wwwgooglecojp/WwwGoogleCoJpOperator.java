@@ -1,6 +1,6 @@
 package operators.wwwgooglecojp;
 
-import operators.supers.FuncVoid;
+import operators.supers.IFuncVoid;
 import operators.supers.SuperOperator;
 import org.openqa.selenium.Keys;
 import pages.wwwgooglecojp.WwwGoogleCoJpPage;
@@ -11,9 +11,11 @@ public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 	}
 
 	public void enterLogin(final String email, final String pass) {
-		execute(new FuncVoid() {
+		execute(new IFuncVoid() {
 			@Override
 			public void accept() {
+				getPage().inputLoginEmail().sendKeys(email);
+
 				getPage().aLogin().sendKeys(Keys.ENTER);
 				getPage().inputLoginEmail().sendKeys(email);
 				getPage().inputLoginPasswd().sendKeys(pass);
@@ -23,7 +25,7 @@ public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 	}
 
 	public void clickGmail() {
-		execute(new FuncVoid() {
+		execute(new IFuncVoid() {
 			@Override
 			public void accept() {
 				getPage().aGmail().sendKeys(Keys.ENTER);

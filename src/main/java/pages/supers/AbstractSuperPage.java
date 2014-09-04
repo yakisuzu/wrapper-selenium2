@@ -1,12 +1,15 @@
 package pages.supers;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
 
 public abstract class AbstractSuperPage {
-
 	private WebDriver driver;
+	private Wait<WebDriver> wdriver;
 
 	protected abstract String initializeUrl();
 
@@ -16,7 +19,7 @@ public abstract class AbstractSuperPage {
 
 	private void initializeSsl() {
 		// TODO conf ie
-		if (getUrl().matches("refs://______")) {
+		if (getUrl().matches("res://______")) {
 			driver.navigate().to("javascript:document.getElementById('overridelink').click()");
 		}
 	}
@@ -25,10 +28,11 @@ public abstract class AbstractSuperPage {
 		this.driver = driver;
 		this.driver.get(initializeUrl());
 		initializeSsl();
+		wdriver = new WebDriverWait(driver, 15);
 	}
 
 	protected WebElement findXpath(String elementXpath) {
-		return driver.findElement(By.xpath(elementXpath));
+		return wdriver.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(elementXpath)));
 	}
 
 	public String getUrl() {
@@ -41,5 +45,9 @@ public abstract class AbstractSuperPage {
 
 	public void quit() {
 		driver.quit();
+	}
+
+	public File getScreenshot() {
+		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	}
 }

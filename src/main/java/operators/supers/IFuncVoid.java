@@ -1,5 +1,5 @@
 package operators.supers;
 
-public interface FuncVoid {
+public interface IFuncVoid {
 	public void accept();
 }
