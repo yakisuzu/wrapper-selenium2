@@ -35,10 +35,10 @@ public class SuperOperator<T extends AbstractSuperPage> {
 
 	public void printScreen(String fileName) {
 		String path = "./printScreen/";
-		String num = "_" + String.format("%1$04d", printNo++);
+		String no = "_" + String.format("%1$04d", printNo++);
 		String extension = ".bmp";
 		try {
-			FileUtils.copyFile(page.getScreenshot(), new File(path + fileName + num + extension));
+			FileUtils.copyFile(page.getScreenshot(), new File(path + fileName + no + extension));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
