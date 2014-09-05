@@ -14,8 +14,6 @@ public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
 		execute(new IFuncVoid() {
 			@Override
 			public void accept() {
-				getPage().inputLoginEmail().sendKeys(email);
-
 				getPage().aLogin().sendKeys(Keys.ENTER);
 				getPage().inputLoginEmail().sendKeys(email);
 				getPage().inputLoginPasswd().sendKeys(pass);

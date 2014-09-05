@@ -6,7 +6,6 @@ IE 2.39.0
 (2.40.0以上はsendkeysが遅い)
 
 # TODO
-- log対応
 - 自己証明書対応
  - IE
  - FF

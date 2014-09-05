@@ -6,13 +6,12 @@ import pages.wwwgooglecojp.WwwGoogleCoJpPage;
 import support.PageProperties;
 
 public class WwwGoogleCoJpFeature {
-	public static void login(WebDriver driver) {
+	public static WwwGoogleCoJpOperator login(WebDriver driver) {
 		WwwGoogleCoJpOperator ope = new WwwGoogleCoJpOperator(new WwwGoogleCoJpPage(driver));
 
 		String email = PageProperties.getInstance().getProperty("wwwgooglecojp.loginId");
 		String pass = PageProperties.getInstance().getProperty("wwwgooglecojp.loginPass");
 		ope.enterLogin(email, pass);
-
-		ope.quit();
+		return ope;
 	}
 }
