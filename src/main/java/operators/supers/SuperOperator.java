@@ -1,12 +1,15 @@
 package operators.supers;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.supers.AbstractSuperPage;
 
 import java.io.File;
 import java.io.IOException;
 
 public class SuperOperator<T extends AbstractSuperPage> {
+	private static Logger LOG = LoggerFactory.getLogger(SuperOperator.class);
 	private T page;
 	private boolean errorFlg = false;
 	private int printNo = 1;
@@ -23,7 +26,7 @@ public class SuperOperator<T extends AbstractSuperPage> {
 		try {
 			func.accept();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOG.error("実行エラー", e);
 			printScreen("ERROR_" + page.getClass().getName());
 			errorFlg = true;
 		}
@@ -40,7 +43,7 @@ public class SuperOperator<T extends AbstractSuperPage> {
 		try {
 			FileUtils.copyFile(page.getScreenshot(), new File(path + fileName + no + extension));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("スクリーンショットエラー", e);
 		}
 	}
 
