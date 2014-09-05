@@ -1,10 +1,14 @@
 package support;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class PageProperties {
+	private static Logger LOG = LoggerFactory.getLogger(PageProperties.class);
 	private static PageProperties instance = new PageProperties();
 	private Properties prop = new Properties();
 
@@ -14,7 +18,7 @@ public class PageProperties {
 		try {
 			prop.load(is);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("properties取得エラー", e);
 		}
 	}
 
