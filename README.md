@@ -11,5 +11,22 @@ IE 2.39.0
  - FF
  - CH
 - showmodal,open対応
-- featuresからpageクラスを隠蔽する
 - コメント書く
+
+### メモ
+- features  
+操作のまとまりを並べる  
+　処理フローの順番を整理  
+operatorを操作  
+pageを意識しない  
+
+- operators  
+処理フローを書く  
+　要素を操作する順番を管理  
+pageと1対1で紐づく  
+　pageを増やしたらoperatorも増やす  
+
+- pages  
+pageの情報を持つ  
+　要素を管理  
+
