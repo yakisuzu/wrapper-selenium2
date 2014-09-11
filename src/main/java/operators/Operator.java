@@ -1,20 +1,20 @@
-package operators.supers;
+package operators;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.supers.AbstractSuperPage;
+import pages.mediator.Mediator;
 
 import java.io.File;
 import java.io.IOException;
 
-public class SuperOperator<T extends AbstractSuperPage> {
-	private static Logger LOG = LoggerFactory.getLogger(SuperOperator.class);
+public class Operator<T extends Mediator> {
+	private static Logger LOG = LoggerFactory.getLogger(Operator.class);
 	private T page;
 	private boolean errorFlg = false;
 	private int printNo = 1;
 
-	public SuperOperator(T page) {
+	public Operator(T page) {
 		this.page = page;
 	}
 

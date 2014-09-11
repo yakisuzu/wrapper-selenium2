@@ -1,4 +1,4 @@
-package pages.supers;
+package pages.mediator;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -7,14 +7,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 
-public abstract class AbstractSuperPage {
+public abstract class Mediator {
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
 
 	protected abstract String initializeUrl();
 
 	@SuppressWarnings({"Unused", "UnusedDeclaration"})
-	private AbstractSuperPage() {
+	private Mediator() {
 	}
 
 	private void initializeSsl() {
@@ -24,7 +24,12 @@ public abstract class AbstractSuperPage {
 		}
 	}
 
-	protected AbstractSuperPage(WebDriver driver) {
+	protected Mediator(Mediator page) {
+		this.driver = page.driver;
+		this.wdriver = page.wdriver;
+	}
+
+	protected Mediator(WebDriver driver) {
 		this.driver = driver;
 		this.driver.get(initializeUrl());
 		initializeSsl();

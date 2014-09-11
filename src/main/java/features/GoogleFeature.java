@@ -1,13 +1,13 @@
 package features;
 
-import operators.wwwgooglecojp.WwwGoogleCoJpOperator;
+import operators.google.GoogleOperator;
 import org.openqa.selenium.WebDriver;
-import pages.wwwgooglecojp.WwwGoogleCoJpPage;
+import pages.mediator.google.GoogleMediator;
 import support.PageProperties;
 
-public class WwwGoogleCoJpFeature {
-	public static WwwGoogleCoJpOperator login(WebDriver driver) {
-		WwwGoogleCoJpOperator ope = new WwwGoogleCoJpOperator(new WwwGoogleCoJpPage(driver));
+public class GoogleFeature {
+	public static GoogleOperator login(WebDriver driver) {
+		GoogleOperator ope = new GoogleOperator(new GoogleMediator(driver));
 
 		String email = PageProperties.getInstance().getProperty("wwwgooglecojp.loginId");
 		String pass = PageProperties.getInstance().getProperty("wwwgooglecojp.loginPass");

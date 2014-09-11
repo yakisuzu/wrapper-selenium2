@@ -1,15 +1,15 @@
 package features;
 
-import operators.wwwgooglecojp.WwwGoogleCoJpOperator;
+import operators.google.GoogleOperator;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import support.GenericUtils;
 
-public class WwwGoogleCoJpFeatureTest {
+public class GoogleFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
 		for (WebDriver driver : GenericUtils.getWebDriverList()) {
-			WwwGoogleCoJpOperator ope = WwwGoogleCoJpFeature.login(driver);
+			GoogleOperator ope = GoogleFeature.login(driver);
 			ope.quit();
 		}
 	}

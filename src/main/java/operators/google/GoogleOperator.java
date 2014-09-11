@@ -1,12 +1,12 @@
-package operators.wwwgooglecojp;
+package operators.google;
 
-import operators.supers.IFuncVoid;
-import operators.supers.SuperOperator;
+import operators.IFuncVoid;
+import operators.Operator;
 import org.openqa.selenium.Keys;
-import pages.wwwgooglecojp.WwwGoogleCoJpPage;
+import pages.mediator.google.GoogleMediator;
 
-public class WwwGoogleCoJpOperator extends SuperOperator<WwwGoogleCoJpPage> {
-	public WwwGoogleCoJpOperator(WwwGoogleCoJpPage page) {
+public class GoogleOperator extends Operator<GoogleMediator> {
+	public GoogleOperator(GoogleMediator page) {
 		super(page);
 	}
 
