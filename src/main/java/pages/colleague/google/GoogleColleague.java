@@ -1,22 +1,12 @@
 package pages.colleague.google;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import pages.mediator.Mediator;
-import support.PageProperties;
+import pages.colleague.Colleague;
+import pages.mediator.google.GoogleMediator;
 
-public class GoogleColleague extends Mediator {
-	public GoogleColleague(Mediator page){
-		super(page);
-	}
-
-	public GoogleColleague(WebDriver driver) {
-		super(driver);
-	}
-
-	@Override
-	protected String initializeUrl() {
-		return PageProperties.getInstance().getProperty("wwwgooglecojp.url");
+public class GoogleColleague extends Colleague<GoogleMediator> {
+	public GoogleColleague(GoogleMediator mediator) {
+		super(mediator);
 	}
 
 	public WebElement aLogin() {
@@ -35,7 +25,7 @@ public class GoogleColleague extends Mediator {
 		return findXpath("//input[@id='Passwd']");
 	}
 
-	public WebElement inputLoginBtn(){
+	public WebElement inputLoginBtn() {
 		return findXpath("//input[@id='signIn']");
 	}
 }

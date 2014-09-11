@@ -1,8 +1,8 @@
 package support;
 
-import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ public class GenericUtils {
 			driverList.add(new FirefoxDriver());
 			//driverList.add(new ChromeDriver());
 			//driverList.add(new InternetExplorerDriver());
-		} catch (SessionNotCreatedException e) {
+		} catch (SessionNotFoundException e) {
 			LOG.error("session作成エラー", e);
 		}
 		return driverList;
