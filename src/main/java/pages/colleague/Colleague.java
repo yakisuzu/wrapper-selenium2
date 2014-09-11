@@ -1,58 +1,16 @@
 package pages.colleague;
 
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.WebElement;
+import pages.mediator.Mediator;
 
-import java.io.File;
+public class Colleague<T extends Mediator> {
+	private T mediator;
 
-public abstract class Colleague {
-	private WebDriver driver;
-	private Wait<WebDriver> wdriver;
-
-	protected abstract String initializeUrl();
-
-	@SuppressWarnings({"Unused", "UnusedDeclaration"})
-	private Colleague() {
-	}
-
-	private void initializeSsl() {
-		// TODO conf ie
-		if (getUrl().matches("res://______")) {
-			driver.navigate().to("javascript:document.getElementById('overridelink').click()");
-		}
-	}
-
-	protected Colleague(Colleague page) {
-		this.driver = page.driver;
-		this.wdriver = page.wdriver;
-	}
-
-	protected Colleague(WebDriver driver) {
-		this.driver = driver;
-		this.driver.get(initializeUrl());
-		initializeSsl();
-		wdriver = new WebDriverWait(driver, 15);
+	public Colleague(T mediator) {
+		this.mediator = mediator;
 	}
 
 	protected WebElement findXpath(String elementXpath) {
-		return wdriver.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(elementXpath)));
-	}
-
-	public String getUrl() {
-		return driver.getCurrentUrl();
-	}
-
-	public String getHtml() {
-		return driver.getPageSource();
-	}
-
-	public void quit() {
-		driver.quit();
-	}
-
-	public File getScreenshot() {
-		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		return mediator.findXpath(elementXpath);
 	}
 }
