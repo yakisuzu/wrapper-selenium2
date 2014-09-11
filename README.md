@@ -26,7 +26,9 @@ pageを意識しない
 pageと1対1で紐づく  
 　pageを増やしたらoperatorも増やす  
 
-- pages  
+- pages.mediator  
 pageの情報を持つ  
 　要素を管理  
+
+- pages.colleague
 

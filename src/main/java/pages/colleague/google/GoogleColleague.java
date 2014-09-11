@@ -1,12 +1,16 @@
-package pages.wwwgooglecojp;
+package pages.colleague.google;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import pages.supers.AbstractSuperPage;
+import pages.mediator.Mediator;
 import support.PageProperties;
 
-public class WwwGoogleCoJpPage extends AbstractSuperPage {
-	public WwwGoogleCoJpPage(WebDriver driver) {
+public class GoogleColleague extends Mediator {
+	public GoogleColleague(Mediator page){
+		super(page);
+	}
+
+	public GoogleColleague(WebDriver driver) {
 		super(driver);
 	}
 
