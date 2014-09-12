@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.colleague.Colleague;
+import pages.colleague.IColleague;
 
 import java.io.File;
 import java.util.HashMap;
@@ -13,8 +13,7 @@ import java.util.Map;
 public abstract class Mediator {
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
-	private Map<Class<Colleague<? extends Mediator>>, Colleague<? extends Mediator>> colleagueMap//
-			= new HashMap<Class<Colleague<? extends Mediator>>, Colleague<? extends Mediator>>();
+	private Map<Class<? extends IColleague>, IColleague> colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
 
 	protected abstract String initializeUrl();
 
@@ -23,7 +22,7 @@ public abstract class Mediator {
 		this.driver.navigate().to(initializeUrl());
 		initializeSsl();
 
-		wdriver = new WebDriverWait(driver, 15);
+		wdriver = new WebDriverWait(driver, 5);
 	}
 
 	private void initializeSsl() {
@@ -33,12 +32,13 @@ public abstract class Mediator {
 		}
 	}
 
-	protected <T extends Mediator> void addColleague(Colleague<T> colleague) {
-		colleagueMap.put((Class<Colleague<? extends Mediator>>) colleague.getClass(), colleague);
+	protected void addColleague(IColleague colleague) {
+		colleagueMap.put(colleague.getClass(), colleague);
 	}
 
-	public <T extends Mediator> Colleague<? extends Mediator> getColleague(Class<Colleague<T>> key) {
-		return colleagueMap.get(key);
+	public <T extends IColleague> T getColleague(Class<T> key) {
+		//noinspection unchecked
+		return (T) colleagueMap.get(key);
 	}
 
 	public WebElement findXpath(String elementXpath) {

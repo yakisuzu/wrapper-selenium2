@@ -1,6 +1,5 @@
 package operators.google;
 
-import operators.IFuncVoid;
 import operators.Operator;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -13,13 +12,13 @@ public class GoogleOperator extends Operator<GoogleMediator> {
 		super(driver);
 	}
 
-	private GoogleColleague coll1 = (GoogleColleague) getColleague(GoogleColleague.class);
-	private GoogleMailColleague coll2 = (GoogleMailColleague) getColleague(GoogleMailColleague.class);
+	private GoogleColleague coll1 =  getColleague(GoogleColleague.class);
+	private GoogleMailColleague coll2 =  getColleague(GoogleMailColleague.class);
 
 	public void enterLogin(final String email, final String pass) {
-		execute(new IFuncVoid() {
+		execute(new Runnable() {
 			@Override
-			public void accept() {
+			public void run() {
 				coll1.aLogin().sendKeys(Keys.ENTER);
 				coll1.inputLoginEmail().sendKeys(email);
 				coll1.inputLoginPasswd().sendKeys(pass);
@@ -29,9 +28,9 @@ public class GoogleOperator extends Operator<GoogleMediator> {
 	}
 
 	public void clickGmail() {
-		execute(new IFuncVoid() {
+		execute(new Runnable() {
 			@Override
-			public void accept() {
+			public void run() {
 				coll2.aGmail().sendKeys(Keys.ENTER);
 			}
 		});
