@@ -1,6 +1,7 @@
 package support;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
@@ -14,13 +15,48 @@ public class GenericUtils {
 
 	public static List<WebDriver> getWebDriverList() {
 		List<WebDriver> driverList = new ArrayList<WebDriver>();
-		try {
-			driverList.add(new FirefoxDriver());
-			//driverList.add(new ChromeDriver());
-			//driverList.add(new InternetExplorerDriver());
-		} catch (SessionNotFoundException e) {
-			LOG.error("session作成エラー", e);
-		}
+		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+			@Override
+			public WebDriver get() {
+				return new FirefoxDriver();
+			}
+		}));
+//		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+//			@Override
+//			public WebDriver get() {
+//				return new ChromeDriver();
+//			}
+//		}));
+//		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+//			@Override
+//			public WebDriver get() {
+//				return new InternetExplorerDriver();
+//			}
+//		}));
 		return driverList;
+	}
+
+	private static WebDriver createWebDriver(ISupplier<WebDriver> func) {
+		String errorMsg = "WebDriver作成エラー";
+		int tryCntMax = 5;
+
+		for (int tryCnt = 1; tryCnt <= tryCntMax; tryCnt++) {
+			WebDriver dri = null;
+			Throwable t = null;
+			try {
+				dri = func.get();
+			} catch (SessionNotFoundException e) {
+				t = e;
+			} catch (WebDriverException e) {
+				t = e;
+			}
+
+			if (t == null) {
+				return dri;
+			}
+
+			LOG.error(errorMsg + " " + tryCnt + "回目", t);
+		}
+		throw new WebDriverException(errorMsg);
 	}
 }
