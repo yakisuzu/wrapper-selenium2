@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.colleague.Colleague;
+import pages.colleague.IColleague;
 import pages.mediator.Mediator;
 
 import java.io.File;
@@ -12,19 +12,24 @@ import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-public class Operator<T extends Mediator> {
+public class Operator<M extends Mediator> {
 	private static Logger LOG = LoggerFactory.getLogger(Operator.class);
-	private T mediator;
+	private M mediator;
 	private boolean errorFlg = false;
 	private int printNo = 1;
 
+	private Operator() {
+	}
+
 	public Operator(WebDriver driver) {
+		this();
 		String errorMsg = "mediator作成エラー";
 
 		Type type = this.getClass().getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) type;
 		Type[] actualTypeArray = pt.getActualTypeArguments();
-		Class<T> entityClass = (Class<T>) actualTypeArray[0];
+		@SuppressWarnings("unchecked")
+		Class<M> entityClass = (Class<M>) actualTypeArray[0];
 		try {
 			mediator = entityClass.newInstance();
 		} catch (InstantiationException e) {
@@ -36,13 +41,13 @@ public class Operator<T extends Mediator> {
 		mediator.initializeDriver(driver);
 	}
 
-	public Colleague<? extends Mediator> getColleague(Class<? extends Colleague<? extends Mediator>> key){
-		return mediator.getColleague((Class<Colleague<T>>) key);
+	public <T extends IColleague> T getColleague(Class<T> key) {
+		return mediator.getColleague(key);
 	}
 
-	protected void execute(IFuncVoid func) {
+	protected void execute(Runnable func) {
 		try {
-			func.accept();
+			func.run();
 		} catch (Exception e) {
 			LOG.error("実行エラー", e);
 			printScreen("ERROR_" + mediator.getClass().getName());
