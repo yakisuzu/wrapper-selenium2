@@ -1,10 +1,14 @@
 package pages.mediator;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.colleague.IColleague;
+import support.ProcessBuilderUtils;
 
 import java.io.File;
 import java.util.HashMap;
@@ -41,6 +45,18 @@ public abstract class Mediator {
 		return (T) colleagueMap.get(key);
 	}
 
+	public boolean isIe() {
+		return driver instanceof InternetExplorerDriver;
+	}
+
+	public boolean isFf() {
+		return driver instanceof FirefoxDriver;
+	}
+
+	public boolean isGc() {
+		return driver instanceof ChromeDriver;
+	}
+
 	public WebElement findXpath(String elementXpath) {
 		return wdriver.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(elementXpath)));
 	}
@@ -59,6 +75,10 @@ public abstract class Mediator {
 
 	public void quit() {
 		driver.quit();
+		//todo
+		if (isIe()) {
+			ProcessBuilderUtils.killProcess("IEDriverServer.exe");
+			ProcessBuilderUtils.killProcess("iexplore.exe");
+		}
 	}
-
 }
