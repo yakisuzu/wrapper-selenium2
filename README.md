@@ -2,14 +2,18 @@
 jdk1.6以上
 
 ## WebDriver
-IE 2.39.0
-(2.40.0以上はsendkeysが遅い)
+- IE 2.39.0(32bit)  
+2.40.0(32bit)以上、64bitはsendkeysが遅い
+- FF  
+開発環境
+- GC  
+未確認
 
-# TODO
+### TODO
 - 自己証明書対応
  - IE
  - FF
- - CH
+ - GC
 - showmodal,open対応
 - jsを流すIF対応
 - jsのダイアログ制御対応

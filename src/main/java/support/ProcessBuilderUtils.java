@@ -12,6 +12,11 @@ public class ProcessBuilderUtils {
 	private static Logger LOG = LoggerFactory.getLogger(ProcessBuilderUtils.class);
 
 	public static void killProcess(String processName) {
+		//todo windows以外の対応
+		if (!PlatformUtils.isWindows()) {
+			return;
+		}
+
 		String[] comTasklist = {"tasklist", "/fi", "\"imagename eq " + processName + "\""};
 		Process process = exeProcess(comTasklist);
 
