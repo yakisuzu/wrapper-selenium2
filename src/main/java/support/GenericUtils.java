@@ -2,12 +2,16 @@ package support;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GenericUtils {
@@ -15,24 +19,42 @@ public class GenericUtils {
 
 	public static List<WebDriver> getWebDriverList() {
 		List<WebDriver> driverList = new ArrayList<WebDriver>();
-		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
-			@Override
-			public WebDriver get() {
-				return new FirefoxDriver();
-			}
-		}));
-//		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
-//			@Override
-//			public WebDriver get() {
-//				return new ChromeDriver();
-//			}
-//		}));
-//		driverList.add(createWebDriver(new ISupplier<WebDriver>() {
-//			@Override
-//			public WebDriver get() {
-//				return new InternetExplorerDriver();
-//			}
-//		}));
+
+		final String IE = "ie";
+		final String FF = "ff";
+		final String GC = "gc";
+		//List<String> targetList = Arrays.asList(IE, FF, GC);
+		List<String> targetList = Arrays.asList(FF);
+
+		if (targetList.contains(IE)) {
+			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+				@Override
+				public WebDriver get() {
+					DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+					capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+					return new InternetExplorerDriver(capabilities);
+				}
+			}));
+		}
+
+		if (targetList.contains(FF)) {
+			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+				@Override
+				public WebDriver get() {
+					return new FirefoxDriver();
+				}
+			}));
+		}
+
+		if (targetList.contains(GC)) {
+			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+				@Override
+				public WebDriver get() {
+					return new ChromeDriver();
+				}
+			}));
+		}
+
 		return driverList;
 	}
 
