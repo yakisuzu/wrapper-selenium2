@@ -17,7 +17,7 @@ import java.util.Map;
 public abstract class Mediator {
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
-	private Map<Class<? extends IColleague>, IColleague> colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
+	private Map<Class<? extends IColleague>, IColleague> colleagueMap;
 
 	protected abstract String initializeUrl();
 
@@ -27,6 +27,7 @@ public abstract class Mediator {
 		initializeSsl();
 
 		wdriver = new WebDriverWait(driver, 5);
+		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
 	}
 
 	private void initializeSsl() {
@@ -40,8 +41,8 @@ public abstract class Mediator {
 		colleagueMap.put(colleague.getClass(), colleague);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends IColleague> T getColleague(Class<T> key) {
-		//noinspection unchecked
 		return (T) colleagueMap.get(key);
 	}
 
