@@ -21,13 +21,16 @@ public abstract class Mediator {
 
 	protected abstract String initializeUrl();
 
+	public Mediator(){
+		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
+	}
+
 	public void initializeDriver(WebDriver driver) {
 		this.driver = driver;
 		this.driver.navigate().to(initializeUrl());
 		initializeSsl();
 
 		wdriver = new WebDriverWait(driver, 5);
-		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
 	}
 
 	private void initializeSsl() {
