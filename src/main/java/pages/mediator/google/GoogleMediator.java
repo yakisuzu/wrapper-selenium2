@@ -7,6 +7,7 @@ import support.PageProperties;
 
 public class GoogleMediator extends Mediator {
 	public GoogleMediator(){
+		super();
 		addColleague(new GoogleColleague(this));
 		addColleague(new GoogleMailColleague(this));
 	}

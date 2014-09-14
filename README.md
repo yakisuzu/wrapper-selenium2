@@ -3,7 +3,7 @@ jdk1.6以上
 
 ## WebDriver
 - IE 2.39.0(32bit)  
-2.40.0(32bit)以上、64bitはsendkeysが遅い
+2.40.0-2.42.2(32bit)、64bitはsendkeysが遅い
 - FF  
 開発環境
 - GC  

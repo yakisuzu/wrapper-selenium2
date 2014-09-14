@@ -38,7 +38,7 @@ public class GenericUtils {
 
 	private static WebDriver createWebDriver(ISupplier<WebDriver> func) {
 		String errorMsg = "WebDriver作成エラー";
-		int tryCntMax = 5;
+		int tryCntMax = 3;
 
 		for (int tryCnt = 1; tryCnt <= tryCntMax; tryCnt++) {
 			WebDriver dri = null;
