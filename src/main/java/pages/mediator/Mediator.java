@@ -7,6 +7,8 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pages.colleague.IColleague;
 import support.ProcessBuilderUtils;
 
@@ -15,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Mediator {
+	private static Logger LOG = LoggerFactory.getLogger(Mediator.class);
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
 	private Map<Class<? extends IColleague>, IColleague> colleagueMap;
