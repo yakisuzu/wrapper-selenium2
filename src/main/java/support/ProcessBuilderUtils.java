@@ -38,7 +38,7 @@ public class ProcessBuilderUtils {
 					continue;
 				}
 
-				String[] sp = line.split("¥s+");
+				String[] sp = line.split("¥¥s+");
 
 				LOG.info("target is [" + sp[0] + "]" + sp[1]);
 
