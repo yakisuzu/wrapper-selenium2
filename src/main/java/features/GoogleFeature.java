@@ -2,7 +2,7 @@ package features;
 
 import operators.google.GoogleOperator;
 import org.openqa.selenium.WebDriver;
-import support.PageProperties;
+import support.properties.PageProperties;
 
 public class GoogleFeature {
 	public static GoogleOperator login(WebDriver driver) {
