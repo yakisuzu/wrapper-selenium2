@@ -3,7 +3,7 @@ package pages.mediator.google;
 import pages.colleague.google.GoogleColleague;
 import pages.colleague.google.GoogleMailColleague;
 import pages.mediator.Mediator;
-import support.PageProperties;
+import support.properties.PageProperties;
 
 public class GoogleMediator extends Mediator {
 	public GoogleMediator(){

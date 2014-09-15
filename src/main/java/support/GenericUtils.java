@@ -9,6 +9,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import support.properties.SystemProperties;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,11 +21,11 @@ public class GenericUtils {
 	public static List<WebDriver> getWebDriverList() {
 		List<WebDriver> driverList = new ArrayList<WebDriver>();
 
-		final String IE = "ie";
-		final String FF = "ff";
-		final String GC = "gc";
-		//List<String> targetList = Arrays.asList(IE, FF, GC);
-		List<String> targetList = Arrays.asList(FF);
+		final String IE = SystemProperties.getInstance().getProperty("webdriver.ie");
+		final String FF = SystemProperties.getInstance().getProperty("webdriver.ff");
+		final String GC = SystemProperties.getInstance().getProperty("webdriver.gc");
+		final String[] initList = SystemProperties.getInstance().getProperty("init.webdriverlist").split(",");
+		final List<String> targetList = Arrays.asList(initList);
 
 		if (targetList.contains(IE)) {
 			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
