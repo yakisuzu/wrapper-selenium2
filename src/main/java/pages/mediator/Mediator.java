@@ -37,8 +37,7 @@ public abstract class Mediator {
 	}
 
 	private void initializeSsl() {
-		// TODO conf ie
-		if (getUrl().matches("res://______")) {
+		if (getUrl().matches("^res:\\/\\/ieframe.dll\\/invalidcert.htm\\?SSLError=.*")) {
 			driver.navigate().to("javascript:document.getElementById('overridelink').click()");
 		}
 	}
