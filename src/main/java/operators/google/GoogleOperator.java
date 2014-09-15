@@ -22,7 +22,7 @@ public class GoogleOperator extends Operator<GoogleMediator> {
 				coll1.aLogin().sendKeys(Keys.ENTER);
 				coll1.inputLoginEmail().sendKeys(email);
 				coll1.inputLoginPasswd().sendKeys(pass);
-				coll1.inputLoginBtn().sendKeys(Keys.ENTER);
+				//coll1.inputLoginBtn().sendKeys(Keys.ENTER);
 			}
 		});
 	}
