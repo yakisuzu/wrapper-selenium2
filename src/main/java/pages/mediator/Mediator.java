@@ -1,9 +1,11 @@
 package pages.mediator;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,21 +13,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.colleague.IColleague;
 import support.ProcessBuilderUtils;
+import support.properties.SystemProperties;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class Mediator {
+	protected abstract String initializeUrl();
+
 	private static Logger LOG = LoggerFactory.getLogger(Mediator.class);
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
 	private Map<Class<? extends IColleague>, IColleague> colleagueMap;
+	private int printNo;
 
-	protected abstract String initializeUrl();
-
-	public Mediator(){
+	public Mediator() {
 		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
+		printNo = 1;
 	}
 
 	public void initializeDriver(WebDriver driver) {
@@ -33,7 +40,7 @@ public abstract class Mediator {
 		this.driver.navigate().to(initializeUrl());
 		initializeSsl();
 
-		wdriver = new WebDriverWait(driver, 5);
+		wdriver = new WebDriverWait(driver, SystemProperties.getInstance().getInt("config.tryelementfindtime"));
 	}
 
 	private void initializeSsl() {
@@ -63,12 +70,60 @@ public abstract class Mediator {
 		return driver instanceof ChromeDriver;
 	}
 
-	public WebElement findXpath(String elementXpath) {
-		return wdriver.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(elementXpath)));
+	public WebElement visibilityBy(By by) {
+		return findElement(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
 	}
 
-	public File getScreenshot() {
-		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+	public WebElement presenceBy(By by) {
+		return findElement(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
+	}
+
+	private WebElement findElement(ExpectedCondition<List<WebElement>> expectedList) {
+		List<WebElement> elementList = findElementList(1, expectedList);
+		if (elementList.isEmpty()) {
+			throw new ElementNotVisibleException("element0件エラー");
+		} else if (elementList.size() > 1) {
+			throw new ElementNotVisibleException("element2件以上エラー");
+		}
+		return elementList.get(0);
+	}
+
+	private List<WebElement> findElementList(int exeCnt, ExpectedCondition<List<WebElement>> expectedList) {
+		final int exeCntMax = SystemProperties.getInstance().getInt("config.tryelementfindcount");
+
+		List<WebElement> elementList = null;
+		try {
+			elementList = wdriver.until(expectedList);
+		} catch (NoSuchElementException e) {
+			if (exeCntMax >= exeCnt) {
+				LOG.error("element取得エラー", e);
+				printScreen("ERROR_" + this.getClass().getName());
+				throw e;
+			}
+			findElementList(exeCnt + 1, expectedList);
+		}
+		return elementList;
+	}
+
+	public void printScreen(String fileName) {
+		String path = "./printScreen/";
+		String no = String.format("%1$04d", printNo++);
+		String driverName = "";
+		if (isIe()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.ie");
+		} else if (isFf()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.ff");
+		} else if (isGc()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.gc");
+		}
+		String extension = ".bmp";
+		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+		try {
+			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + driverName + "_" + no + extension));
+		} catch (IOException e) {
+			LOG.error("スクリーンショットエラー", e);
+		}
 	}
 
 	public String getUrl() {

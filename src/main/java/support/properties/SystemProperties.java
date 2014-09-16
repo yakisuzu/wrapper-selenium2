@@ -26,7 +26,11 @@ public class SystemProperties extends AProperties {
 		return instance;
 	}
 
-	public String getProperty(String key) {
+	public String getString(String key) {
 		return prop.getProperty(key);
+	}
+
+	public int getInt(String key) {
+		return new Integer(prop.getProperty(key));
 	}
 }

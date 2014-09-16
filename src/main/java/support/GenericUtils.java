@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,19 +20,20 @@ public class GenericUtils {
 	public static List<WebDriver> getWebDriverList() {
 		List<WebDriver> driverList = new ArrayList<WebDriver>();
 
-		final String IE = SystemProperties.getInstance().getProperty("webdriver.ie");
-		final String FF = SystemProperties.getInstance().getProperty("webdriver.ff");
-		final String GC = SystemProperties.getInstance().getProperty("webdriver.gc");
-		final String[] initList = SystemProperties.getInstance().getProperty("init.webdriverlist").split(",");
+		final String IE = SystemProperties.getInstance().getString("webdriver.ie");
+		final String FF = SystemProperties.getInstance().getString("webdriver.ff");
+		final String GC = SystemProperties.getInstance().getString("webdriver.gc");
+		final String[] initList = SystemProperties.getInstance().getString("init.webdriverlist").split(",");
 		final List<String> targetList = Arrays.asList(initList);
 
 		if (targetList.contains(IE)) {
 			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
 				@Override
 				public WebDriver get() {
-					DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
-					capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
-					return new InternetExplorerDriver(capabilities);
+//					DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+//					capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+//					return new InternetExplorerDriver(capabilities);
+					return new InternetExplorerDriver();
 				}
 			}));
 		}
@@ -61,7 +61,7 @@ public class GenericUtils {
 
 	private static WebDriver createWebDriver(ISupplier<WebDriver> func) {
 		String errorMsg = "WebDriver作成エラー";
-		int tryCntMax = 3;
+		final int tryCntMax = SystemProperties.getInstance().getInt("config.trywebdrivercreatecount");
 
 		for (int tryCnt = 1; tryCnt <= tryCntMax; tryCnt++) {
 			WebDriver dri = null;
