@@ -36,6 +36,10 @@ public class Operator<M extends Mediator> {
 		mediator.initializeDriver(driver);
 	}
 
+	public void getPrint() {
+		mediator.printScreen(this.getClass().getName());
+	}
+
 	public <T extends IColleague> T getColleague(Class<T> key) {
 		return mediator.getColleague(key);
 	}
