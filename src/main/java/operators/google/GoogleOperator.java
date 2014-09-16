@@ -12,27 +12,17 @@ public class GoogleOperator extends Operator<GoogleMediator> {
 		super(driver);
 	}
 
-	private GoogleColleague coll1 =  getColleague(GoogleColleague.class);
-	private GoogleMailColleague coll2 =  getColleague(GoogleMailColleague.class);
+	private GoogleColleague coll1 = getColleague(GoogleColleague.class);
+	private GoogleMailColleague coll2 = getColleague(GoogleMailColleague.class);
 
 	public void enterLogin(final String email, final String pass) {
-		execute(new Runnable() {
-			@Override
-			public void run() {
-				coll1.aLogin().sendKeys(Keys.ENTER);
-				coll1.inputLoginEmail().sendKeys(email);
-				coll1.inputLoginPasswd().sendKeys(pass);
-				//coll1.inputLoginBtn().sendKeys(Keys.ENTER);
-			}
-		});
+		coll1.aLogin().sendKeys(Keys.ENTER);
+		coll1.inputLoginEmail().sendKeys(email);
+		coll1.inputLoginPasswd().sendKeys(pass);
+		//coll1.inputLoginBtn().sendKeys(Keys.ENTER);
 	}
 
 	public void clickGmail() {
-		execute(new Runnable() {
-			@Override
-			public void run() {
-				coll2.aGmail().sendKeys(Keys.ENTER);
-			}
-		});
+		coll2.aGmail().sendKeys(Keys.ENTER);
 	}
 }

@@ -13,10 +13,5 @@ public class SkelServletOperator extends Operator<SkelServletMediator> {
 	private SkelServletColleague coll1 = getColleague(SkelServletColleague.class);
 
 	public void clickWinOpen() {
-		execute(new Runnable() {
-			@Override
-			public void run() {
-			}
-		});
 	}
 }

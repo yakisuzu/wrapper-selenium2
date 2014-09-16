@@ -7,12 +7,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class ProcessBuilderUtils {
 	private static Logger LOG = LoggerFactory.getLogger(ProcessBuilderUtils.class);
 
 	public static void killProcess(String processName) {
-		//todo windows以外の対応
+		// TODO windows以外の対応
 		if (!PlatformUtils.isWindows()) {
 			return;
 		}
@@ -38,9 +39,8 @@ public class ProcessBuilderUtils {
 					continue;
 				}
 
-				String[] sp = line.split("¥¥s+");
-
-				LOG.info("target is [" + sp[0] + "]" + sp[1]);
+				String[] sp = line.split("\\s+");
+				LOG.info("target is [" + Arrays.toString(sp) + "]");
 
 				String[] comTaskkill = {"taskkill", "/pid", sp[1], "/t"};
 				exeProcess(comTaskkill);
@@ -57,6 +57,8 @@ public class ProcessBuilderUtils {
 	public static Process exeProcess(String[] com) {
 		ProcessBuilder pb = new ProcessBuilder(com);
 		Process process = null;
+		LOG.info("process is [" + Arrays.toString(com) + "]");
+
 		try {
 			process = pb.start();
 		} catch (IOException e) {

@@ -17,8 +17,7 @@ jdk1.6以上
 - showmodal,open対応
 - jsを流すIF対応
 - jsのダイアログ制御対応
-- systemプロパティ
- - プロパティクラスのsuper作成
+- プロパティクラスのsuper作成
 - test書く
  - test書く範囲は
 
