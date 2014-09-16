@@ -17,6 +17,8 @@ import support.properties.SystemProperties;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,7 +109,8 @@ public abstract class Mediator {
 
 	public void printScreen(String fileName) {
 		String path = "./printScreen/";
-		String no = String.format("%1$04d", printNo++);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+		String date = sdf.format(new Date());
 		String driverName = "";
 		if (isIe()) {
 			driverName = SystemProperties.getInstance().getString("webdriver.ie");
@@ -116,11 +119,12 @@ public abstract class Mediator {
 		} else if (isGc()) {
 			driverName = SystemProperties.getInstance().getString("webdriver.gc");
 		}
+		String no = String.format("%1$04d", printNo++);
 		String extension = ".bmp";
 		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
 		try {
-			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + driverName + "_" + no + extension));
+			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + date + "_" + driverName + "_" + no + extension));
 		} catch (IOException e) {
 			LOG.error("スクリーンショットエラー", e);
 		}
