@@ -23,18 +23,10 @@ public class ProcessBuilderUtils {
 
 		InputStream is = process.getInputStream();
 		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		try {
-			while (true) {
-				String line = null;
-				try {
-					line = br.readLine();
-				} catch (IOException e) {
-					LOG.error("標準出力取得エラー", e);
-				}
-				if (line == null) {
-					break;
-				}
 
+		try {
+			String line;
+			while ((line = br.readLine()) != null) {
 				if (!line.matches("^" + processName + ".+")) {
 					continue;
 				}
@@ -45,6 +37,8 @@ public class ProcessBuilderUtils {
 				String[] comTaskkill = {"taskkill", "/pid", sp[1], "/t"};
 				exeProcess(comTaskkill);
 			}
+		} catch (IOException e) {
+			LOG.error("標準出力取得エラー", e);
 		} finally {
 			try {
 				br.close();

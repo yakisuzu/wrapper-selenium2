@@ -96,7 +96,7 @@ public abstract class Mediator {
 		List<WebElement> elementList = null;
 		try {
 			elementList = wdriver.until(expectedList);
-		} catch (NoSuchElementException e) {
+		} catch (TimeoutException e) {
 			if (exeCntMax >= exeCnt) {
 				LOG.error("element取得エラー", e);
 				printScreen("ERROR_" + this.getClass().getName());
@@ -140,7 +140,7 @@ public abstract class Mediator {
 
 	public void quit() {
 		driver.quit();
-		//todo
+		// TODO ie以外
 		if (isIe()) {
 			ProcessBuilderUtils.killProcess("IEDriverServer.exe");
 			ProcessBuilderUtils.killProcess("iexplore.exe");
