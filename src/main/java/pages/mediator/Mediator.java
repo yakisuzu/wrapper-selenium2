@@ -5,6 +5,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
@@ -29,8 +30,13 @@ public abstract class Mediator {
 	private static Logger LOG = LoggerFactory.getLogger(Mediator.class);
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
+	private Actions action;
 	private Map<Class<? extends IColleague>, IColleague> colleagueMap;
 	private int printNo;
+
+	///////////////////////////////////////////////////
+	//constructor
+	///////////////////////////////////////////////////
 
 	public Mediator() {
 		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
@@ -43,6 +49,8 @@ public abstract class Mediator {
 		initializeSsl();
 
 		wdriver = new WebDriverWait(driver, SystemProperties.getInstance().getInt("config.tryelementfindtime"));
+
+		action = new Actions(driver);
 	}
 
 	private void initializeSsl() {
@@ -51,14 +59,9 @@ public abstract class Mediator {
 		}
 	}
 
-	protected void addColleague(IColleague colleague) {
-		colleagueMap.put(colleague.getClass(), colleague);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends IColleague> T getColleague(Class<T> key) {
-		return (T) colleagueMap.get(key);
-	}
+	///////////////////////////////////////////////////
+	//for mediator
+	///////////////////////////////////////////////////
 
 	public boolean isIe() {
 		return driver instanceof InternetExplorerDriver;
@@ -71,6 +74,63 @@ public abstract class Mediator {
 	public boolean isGc() {
 		return driver instanceof ChromeDriver;
 	}
+
+	protected void addColleague(IColleague colleague) {
+		colleagueMap.put(colleague.getClass(), colleague);
+	}
+
+	public String getUrl() {
+		return driver.getCurrentUrl();
+	}
+
+	public String getHtml() {
+		return driver.getPageSource();
+	}
+
+	///////////////////////////////////////////////////
+	//for operators
+	///////////////////////////////////////////////////
+
+	@SuppressWarnings("unchecked")
+	public <T extends IColleague> T getColleague(Class<T> key) {
+		return (T) colleagueMap.get(key);
+	}
+
+	public void printScreen(String fileName) {
+		String path = "./printScreen/";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
+		String date = sdf.format(new Date());
+		String driverName = "";
+		if (isIe()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.ie");
+		} else if (isFf()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.ff");
+		} else if (isGc()) {
+			driverName = SystemProperties.getInstance().getString("webdriver.gc");
+		}
+		String no = String.format("%1$04d", printNo++);
+		String extension = ".bmp";
+		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+
+		try {
+			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + date + "_" + driverName + "_" + no + extension));
+		} catch (IOException e) {
+			LOG.error("スクリーンショットエラー", e);
+		}
+	}
+
+	public void quit() {
+		driver.quit();
+		// TODO ie以外
+		if (isIe()) {
+			ProcessBuilderUtils.killProcess("IEDriverServer.exe");
+			ProcessBuilderUtils.killProcess("iexplore.exe");
+		}
+	}
+
+	///////////////////////////////////////////////////
+	//for colleague
+	///////////////////////////////////////////////////
 
 	public WebElement visibilityBy(By by) {
 		return findElement(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
@@ -107,43 +167,7 @@ public abstract class Mediator {
 		return elementList;
 	}
 
-	public void printScreen(String fileName) {
-		String path = "./printScreen/";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
-		String date = sdf.format(new Date());
-		String driverName = "";
-		if (isIe()) {
-			driverName = SystemProperties.getInstance().getString("webdriver.ie");
-		} else if (isFf()) {
-			driverName = SystemProperties.getInstance().getString("webdriver.ff");
-		} else if (isGc()) {
-			driverName = SystemProperties.getInstance().getString("webdriver.gc");
-		}
-		String no = String.format("%1$04d", printNo++);
-		String extension = ".bmp";
-		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-
-		try {
-			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + date + "_" + driverName + "_" + no + extension));
-		} catch (IOException e) {
-			LOG.error("スクリーンショットエラー", e);
-		}
-	}
-
-	public String getUrl() {
-		return driver.getCurrentUrl();
-	}
-
-	public String getHtml() {
-		return driver.getPageSource();
-	}
-
-	public void quit() {
-		driver.quit();
-		// TODO ie以外
-		if (isIe()) {
-			ProcessBuilderUtils.killProcess("IEDriverServer.exe");
-			ProcessBuilderUtils.killProcess("iexplore.exe");
-		}
+	public Actions getActions() {
+		return action;
 	}
 }

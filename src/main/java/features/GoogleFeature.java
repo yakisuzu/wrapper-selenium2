@@ -8,8 +8,8 @@ public class GoogleFeature {
 	public static GoogleOperator login(WebDriver driver) {
 		GoogleOperator ope = new GoogleOperator(driver);
 
-		String email = PageProperties.getInstance().getProperty("wwwgooglecojp.loginId");
-		String pass = PageProperties.getInstance().getProperty("wwwgooglecojp.loginPass");
+		String email = PageProperties.getInstance().getString("wwwgooglecojp.loginId");
+		String pass = PageProperties.getInstance().getString("wwwgooglecojp.loginPass");
 		ope.enterLogin(email, pass);
 		return ope;
 	}
