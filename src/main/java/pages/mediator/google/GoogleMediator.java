@@ -14,6 +14,6 @@ public class GoogleMediator extends Mediator {
 
 	@Override
 	protected String initializeUrl() {
-		return PageProperties.getInstance().getProperty("wwwgooglecojp.url");
+		return PageProperties.getInstance().getString("wwwgooglecojp.url");
 	}
 }

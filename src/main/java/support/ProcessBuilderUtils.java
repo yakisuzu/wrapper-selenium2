@@ -34,7 +34,7 @@ public class ProcessBuilderUtils {
 				String[] sp = line.split("\\s+");
 				LOG.info("target is [" + Arrays.toString(sp) + "]");
 
-				String[] comTaskkill = {"taskkill", "/pid", sp[1], "/t"};
+				String[] comTaskkill = {"taskkill", "/pid", sp[1], "/f"};
 				exeProcess(comTaskkill);
 			}
 		} catch (IOException e) {
@@ -50,23 +50,16 @@ public class ProcessBuilderUtils {
 
 	public static Process exeProcess(String[] com) {
 		ProcessBuilder pb = new ProcessBuilder(com);
-		Process process = null;
+		pb.redirectErrorStream(true);
 		LOG.info("process is [" + Arrays.toString(com) + "]");
 
+		Process process = null;
 		try {
 			process = pb.start();
+			process.getOutputStream().close();
 		} catch (IOException e) {
 			LOG.error("プロセス実行エラー", e);
 		}
-		wait(process);
 		return process;
-	}
-
-	private static void wait(Process pro) {
-		try {
-			pro.waitFor();
-		} catch (InterruptedException e) {
-			LOG.error("プロセス待ちエラー", e);
-		}
 	}
 }

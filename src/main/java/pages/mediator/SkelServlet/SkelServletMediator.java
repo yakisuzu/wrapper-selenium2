@@ -12,6 +12,6 @@ public class SkelServletMediator extends Mediator {
 
 	@Override
 	protected String initializeUrl() {
-		return PageProperties.getInstance().getProperty("skelservlet.url");
+		return PageProperties.getInstance().getString("skelservlet.url");
 	}
 }

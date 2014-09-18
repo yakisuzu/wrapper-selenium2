@@ -1,36 +1,15 @@
 package support.properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 public class SystemProperties extends AProperties {
-	private static Logger LOG = LoggerFactory.getLogger(SystemProperties.class);
-	private static SystemProperties instance = new SystemProperties();
-	private Properties prop = new Properties();
+	static {
+		new SystemProperties("system.properties");
+	}
 
-	private SystemProperties() {
-		ClassLoader loader = this.getClass().getClassLoader();
-		InputStream is = loader.getResourceAsStream("system.properties");
-		try {
-			prop.load(is);
-		} catch (IOException e) {
-			LOG.error("properties取得エラー", e);
-		}
+	private SystemProperties(String file) {
+		super(file);
 	}
 
 	public static SystemProperties getInstance() {
-		return instance;
-	}
-
-	public String getString(String key) {
-		return prop.getProperty(key);
-	}
-
-	public int getInt(String key) {
-		return new Integer(prop.getProperty(key));
+		return getInstance(SystemProperties.class);
 	}
 }

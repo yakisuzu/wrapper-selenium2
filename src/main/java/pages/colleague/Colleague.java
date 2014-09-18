@@ -2,6 +2,7 @@ package pages.colleague;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import pages.mediator.Mediator;
 
 public class Colleague<T extends Mediator> implements IColleague {
@@ -21,5 +22,13 @@ public class Colleague<T extends Mediator> implements IColleague {
 
 	protected WebElement presenceXpath(String elementXpath) {
 		return mediator.presenceBy(By.xpath(elementXpath));
+	}
+
+	protected Actions getActions() {
+		return mediator.getActions();
+	}
+
+	protected void run(Actions action) {
+		action.build().perform();
 	}
 }
