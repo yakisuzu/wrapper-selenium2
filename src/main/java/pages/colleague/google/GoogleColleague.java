@@ -10,22 +10,22 @@ public class GoogleColleague extends Colleague<GoogleMediator> {
 	}
 
 	public WebElement aLogin() {
-		return visibilityXpath("//a[contains(@href,'https://mail.google.com/mail/')]");
+		return findXpath("//a[contains(@href,'https://mail.google.com/mail/')]");
 	}
 
 	public WebElement aGmail() {
-		return visibilityXpath("//a[contains(@href,'https://accounts.google.com/ServiceLogin')]");
+		return findXpath("//a[contains(@href,'https://accounts.google.com/ServiceLogin')]");
 	}
 
 	public WebElement inputLoginEmail() {
-		return visibilityXpath("//input[@id='Email']");
+		return findXpath("//input[@id='Email']");
 	}
 
 	public WebElement inputLoginPasswd() {
-		return visibilityXpath("//input[@id='Passwd']");
+		return findXpath("//input[@id='Passwd']");
 	}
 
 	public WebElement inputLoginBtn() {
-		return visibilityXpath("//input[@id='signIn']");
+		return findXpath("//input[@id='signIn']");
 	}
 }
