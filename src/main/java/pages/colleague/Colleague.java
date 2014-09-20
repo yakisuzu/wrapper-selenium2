@@ -16,12 +16,8 @@ public class Colleague<T extends Mediator> implements IColleague {
 		this.mediator = mediator;
 	}
 
-	protected WebElement visibilityXpath(String elementXpath) {
-		return mediator.visibilityBy(By.xpath(elementXpath));
-	}
-
-	protected WebElement presenceXpath(String elementXpath) {
-		return mediator.presenceBy(By.xpath(elementXpath));
+	protected WebElement findXpath(String elementXpath) {
+		return mediator.findElement(By.xpath(elementXpath));
 	}
 
 	protected Actions getActions() {

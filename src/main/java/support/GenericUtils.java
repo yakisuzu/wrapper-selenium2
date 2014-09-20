@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import support.properties.SystemProperties;
@@ -60,26 +59,23 @@ public class GenericUtils {
 	}
 
 	private static WebDriver createWebDriver(ISupplier<WebDriver> func) {
-		String errorMsg = "WebDriver作成エラー";
+		int tryCnt = 1;
 		final int tryCntMax = SystemProperties.getInstance().getInt("config.trywebdrivercreatecount");
 
-		for (int tryCnt = 1; tryCnt <= tryCntMax; tryCnt++) {
-			WebDriver dri = null;
-			Throwable t = null;
+		WebDriver dri;
+		while (true) {
 			try {
 				dri = func.get();
-			} catch (SessionNotFoundException e) {
-				t = e;
+				break;
 			} catch (WebDriverException e) {
-				t = e;
-			}
+				LOG.error(tryCnt + "回目 WebDriver作成エラー ", e);
 
-			if (t == null) {
-				return dri;
+				if (tryCnt >= tryCntMax) {
+					throw e;
+				}
 			}
-
-			LOG.error(errorMsg + " " + tryCnt + "回目", t);
+			tryCnt++;
 		}
-		throw new WebDriverException(errorMsg);
+		return dri;
 	}
 }
