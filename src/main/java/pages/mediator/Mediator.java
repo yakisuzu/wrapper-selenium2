@@ -14,7 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.colleague.IColleague;
+import scala.Tuple2;
 import support.ProcessBuilderUtils;
+import support.function.ISupplier;
 import support.properties.SystemProperties;
 
 import java.io.File;
@@ -131,36 +133,55 @@ public abstract class Mediator {
 	///////////////////////////////////////////////////
 	//for colleague
 	///////////////////////////////////////////////////
-	public WebElement findElement(By by) {
-		List<WebElement> elementList;
-		try {
-			elementList = findElementList(ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
-		} catch (WebDriverException eVis) {
-			LOG.error("ExpectedConditions.visibilityOfAllElementsLocatedBy is fail");
-
-			try {
-				elementList = findElementList(ExpectedConditions.presenceOfAllElementsLocatedBy(by));
-			} catch (WebDriverException ePre) {
-				LOG.error("ExpectedConditions.presenceOfAllElementsLocatedBy is fail");
-
-				printScreen("ERROR_" + this.getClass().getName());
-				throw ePre;
+	public WebElement findElement(final By by) {
+		/////////////////////////////////////////////////////////
+		List<WebElement> elementList = null;
+		WebDriverException ex = null;
+		for (ISupplier<ExpectedCondition<List<WebElement>>> func : getExpectedList(by)) {
+			Tuple2<List<WebElement>, WebDriverException> elementListTuple = findElementList(func.get());
+			elementList = elementListTuple._1;
+			ex = elementListTuple._2;
+			if (ex == null) {
+				break;
 			}
 		}
+		if (ex != null) {
+			printScreen("ERROR_" + this.getClass().getName());
+			throw ex;
+		}
 
-		if (elementList.isEmpty()) {
-			throw new NoSuchElementException("element0件エラー");
-		} else if (elementList.size() > 1) {
-			throw new NoSuchElementException("element2件以上エラー");
+		assert elementList != null;
+		if (elementList.size() > 1) {
+			throw new NoSuchElementException("element複数件エラー");
 		}
 		return elementList.get(0);
 	}
 
-	private List<WebElement> findElementList(ExpectedCondition<List<WebElement>> expectedList) {
+	private List<ISupplier<ExpectedCondition<List<WebElement>>>> getExpectedList(final By by) {
+		List<ISupplier<ExpectedCondition<List<WebElement>>>> ret = new ArrayList<ISupplier<ExpectedCondition<List<WebElement>>>>();
+
+		ret.add(new ISupplier<ExpectedCondition<List<WebElement>>>() {
+			@Override
+			public ExpectedCondition<List<WebElement>> get() {
+				return ExpectedConditions.visibilityOfAllElementsLocatedBy(by);
+			}
+		});
+		ret.add(new ISupplier<ExpectedCondition<List<WebElement>>>() {
+			@Override
+			public ExpectedCondition<List<WebElement>> get() {
+				return ExpectedConditions.presenceOfAllElementsLocatedBy(by);
+			}
+		});
+
+		return ret;
+	}
+
+	private Tuple2<List<WebElement>, WebDriverException> findElementList(ExpectedCondition<List<WebElement>> expectedList) {
 		int tryCnt = 1;
 		final int tryCntMax = SystemProperties.getInstance().getInt("config.tryelementfindcount");
 
-		List<WebElement> elementList;
+		List<WebElement> elementList = null;
+		WebDriverException ex = null;
 		while (true) {
 			try {
 				elementList = wdriver.until(expectedList);
@@ -169,12 +190,14 @@ public abstract class Mediator {
 				LOG.error(tryCnt + "回目 element取得エラー " + e.getClass().getName());
 
 				if (tryCnt >= tryCntMax) {
-					throw e;
+					LOG.error(expectedList.toString() + " is fail");
+					ex = e;
+					break;
 				}
 			}
 			tryCnt++;
 		}
-		return elementList;
+		return new Tuple2<List<WebElement>, WebDriverException>(elementList, ex);
 	}
 
 	public Actions getActions() {
