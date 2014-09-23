@@ -113,6 +113,12 @@ public abstract class Mediator {
 		}
 	}
 
+	public String exeJs(String js, Object... obj) {
+		//objはarguments[0]でアクセスする
+		//jsでreturnした文字列を戻り値として受ける
+		return (String) ((JavascriptExecutor) driver).executeScript(js, obj);
+	}
+
 	///////////////////////////////////////////////////
 	//for operators
 	///////////////////////////////////////////////////
@@ -134,7 +140,6 @@ public abstract class Mediator {
 	//for colleague
 	///////////////////////////////////////////////////
 	public WebElement findElement(final By by) {
-		/////////////////////////////////////////////////////////
 		List<WebElement> elementList = null;
 		WebDriverException ex = null;
 		for (ISupplier<ExpectedCondition<List<WebElement>>> func : getExpectedList(by)) {

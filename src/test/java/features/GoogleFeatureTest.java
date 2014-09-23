@@ -9,8 +9,14 @@ public class GoogleFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
 		for (WebDriver driver : GenericUtils.getWebDriverList()) {
-			GoogleOperator ope = GoogleFeature.login(driver);
-			ope.quit();
+			GoogleOperator ope = null;
+			try {
+				ope = GoogleFeature.login(driver);
+			} finally {
+				if (ope != null) {
+					ope.quit();
+				}
+			}
 		}
 	}
 }

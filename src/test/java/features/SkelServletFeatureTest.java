@@ -9,8 +9,14 @@ public class SkelServletFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
 		for (WebDriver driver : GenericUtils.getWebDriverList()) {
-			SkelServletOperator ope = SkelServletFeature.winOpen(driver);
-			ope.quit();
+			SkelServletOperator ope = null;
+			try {
+				ope = SkelServletFeature.winOpen(driver);
+			} finally {
+				if (ope != null) {
+					ope.quit();
+				}
+			}
 		}
 	}
 }

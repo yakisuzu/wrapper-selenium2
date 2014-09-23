@@ -18,19 +18,22 @@ public class Operator<M extends Mediator> {
 
 	public Operator(WebDriver driver) {
 		this();
-		String errorMsg = "mediator作成エラー";
 
 		Type type = this.getClass().getGenericSuperclass();
 		ParameterizedType pt = (ParameterizedType) type;
 		Type[] actualTypeArray = pt.getActualTypeArguments();
 		@SuppressWarnings("unchecked")
 		Class<M> entityClass = (Class<M>) actualTypeArray[0];
+		Exception ex = null;
 		try {
 			mediator = entityClass.newInstance();
 		} catch (InstantiationException e) {
-			LOG.error(errorMsg, e);
+			ex = e;
 		} catch (IllegalAccessException e) {
-			LOG.error(errorMsg, e);
+			ex = e;
+		}
+		if (ex != null) {
+			LOG.error("mediator作成エラー", ex);
 		}
 
 		mediator.initializeDriver(driver);
