@@ -24,16 +24,10 @@ public class Operator<M extends Mediator> {
 		Type[] actualTypeArray = pt.getActualTypeArguments();
 		@SuppressWarnings("unchecked")
 		Class<M> entityClass = (Class<M>) actualTypeArray[0];
-		Exception ex = null;
 		try {
 			mediator = entityClass.newInstance();
-		} catch (InstantiationException e) {
-			ex = e;
-		} catch (IllegalAccessException e) {
-			ex = e;
-		}
-		if (ex != null) {
-			LOG.error("mediator作成エラー", ex);
+		} catch (InstantiationException | IllegalAccessException e) {
+			LOG.error("mediator作成エラー", e);
 		}
 
 		mediator.initializeDriver(driver);
@@ -45,9 +39,5 @@ public class Operator<M extends Mediator> {
 
 	public <T extends IColleague> T getColleague(Class<T> key) {
 		return mediator.getColleague(key);
-	}
-
-	public void quit() {
-		mediator.quit();
 	}
 }

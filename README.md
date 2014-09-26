@@ -1,5 +1,5 @@
 # 環境
-jdk1.6以上
+jdk1.7以上
 
 ## WebDriver
 - IE 2.39.0(32bit)  
@@ -14,10 +14,8 @@ jdk1.6以上
  - FF
  - GC
 - showmodal,open対応
-- jsを流すIF対応
 - jsのダイアログ制御対応
 - test書く
- - test書く範囲は
 
 ### できること
 - features  

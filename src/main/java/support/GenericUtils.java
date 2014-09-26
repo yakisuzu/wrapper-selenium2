@@ -18,7 +18,7 @@ public class GenericUtils {
 	private static Logger LOG = LoggerFactory.getLogger(GenericUtils.class);
 
 	public static List<WebDriver> getWebDriverList() {
-		List<WebDriver> driverList = new ArrayList<WebDriver>();
+		List<WebDriver> driverList = new ArrayList<>();
 
 		final String IE = SystemProperties.getInstance().getString("webdriver.ie");
 		final String FF = SystemProperties.getInstance().getString("webdriver.ff");
