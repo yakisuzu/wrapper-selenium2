@@ -12,6 +12,11 @@ import java.util.Arrays;
 public class ProcessBuilderUtils {
 	private static Logger LOG = LoggerFactory.getLogger(ProcessBuilderUtils.class);
 
+	public static void killProcessIe() {
+		ProcessBuilderUtils.killProcess("IEDriverServer.exe");
+		ProcessBuilderUtils.killProcess("iexplore.exe");
+	}
+
 	public static void killProcess(String processName) {
 		// TODO windows以外の対応
 		if (!PlatformUtils.isWindows()) {
@@ -22,9 +27,7 @@ public class ProcessBuilderUtils {
 		Process process = exeProcess(comTasklist);
 
 		InputStream is = process.getInputStream();
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-		try {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 			String line;
 			while ((line = br.readLine()) != null) {
 				if (!line.matches("^" + processName + ".+")) {
@@ -39,12 +42,6 @@ public class ProcessBuilderUtils {
 			}
 		} catch (IOException e) {
 			LOG.error("標準出力取得エラー", e);
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-				LOG.error("標準出力取得クローズエラー", e);
-			}
 		}
 	}
 

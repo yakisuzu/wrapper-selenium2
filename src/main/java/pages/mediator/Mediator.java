@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.colleague.IColleague;
 import scala.Tuple2;
-import support.ProcessBuilderUtils;
 import support.function.ISupplier;
 import support.properties.SystemProperties;
 
@@ -38,7 +37,7 @@ public abstract class Mediator {
 	//constructor
 	///////////////////////////////////////////////////
 	public Mediator() {
-		colleagueMap = new HashMap<Class<? extends IColleague>, IColleague>();
+		colleagueMap = new HashMap<>();
 		printNo = 1;
 	}
 
@@ -127,15 +126,6 @@ public abstract class Mediator {
 		return (T) colleagueMap.get(key);
 	}
 
-	public void quit() {
-		driver.quit();
-		// TODO ie以外
-		if (isIe()) {
-			ProcessBuilderUtils.killProcess("IEDriverServer.exe");
-			ProcessBuilderUtils.killProcess("iexplore.exe");
-		}
-	}
-
 	///////////////////////////////////////////////////
 	//for colleague
 	///////////////////////////////////////////////////
@@ -152,6 +142,7 @@ public abstract class Mediator {
 		}
 		if (ex != null) {
 			printScreen("ERROR_" + this.getClass().getName());
+			LOG.error(getHtml());
 			throw ex;
 		}
 
@@ -163,7 +154,7 @@ public abstract class Mediator {
 	}
 
 	private List<ISupplier<ExpectedCondition<List<WebElement>>>> getExpectedList(final By by) {
-		List<ISupplier<ExpectedCondition<List<WebElement>>>> ret = new ArrayList<ISupplier<ExpectedCondition<List<WebElement>>>>();
+		List<ISupplier<ExpectedCondition<List<WebElement>>>> ret = new ArrayList<>();
 
 		ret.add(new ISupplier<ExpectedCondition<List<WebElement>>>() {
 			@Override
@@ -192,6 +183,7 @@ public abstract class Mediator {
 				elementList = wdriver.until(expectedList);
 				break;
 			} catch (WebDriverException e) {
+				LOG.error("-------------------------------------------------------");
 				LOG.error(tryCnt + "回目 element取得エラー " + e.getClass().getName());
 
 				if (tryCnt >= tryCntMax) {
@@ -202,7 +194,7 @@ public abstract class Mediator {
 			}
 			tryCnt++;
 		}
-		return new Tuple2<List<WebElement>, WebDriverException>(elementList, ex);
+		return new Tuple2<>(elementList, ex);
 	}
 
 	public Actions getActions() {
