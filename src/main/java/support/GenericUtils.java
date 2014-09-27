@@ -1,5 +1,6 @@
 package support;
 
+import com.google.common.base.Supplier;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -7,7 +8,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import support.function.ISupplier;
 import support.properties.SystemProperties;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class GenericUtils {
 		final List<String> targetList = Arrays.asList(initList);
 
 		if (targetList.contains(IE)) {
-			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+			driverList.add(createWebDriver(new Supplier<WebDriver>() {
 				@Override
 				public WebDriver get() {
 //					DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
@@ -39,7 +39,7 @@ public class GenericUtils {
 		}
 
 		if (targetList.contains(FF)) {
-			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+			driverList.add(createWebDriver(new Supplier<WebDriver>() {
 				@Override
 				public WebDriver get() {
 					return new FirefoxDriver();
@@ -48,7 +48,7 @@ public class GenericUtils {
 		}
 
 		if (targetList.contains(GC)) {
-			driverList.add(createWebDriver(new ISupplier<WebDriver>() {
+			driverList.add(createWebDriver(new Supplier<WebDriver>() {
 				@Override
 				public WebDriver get() {
 					return new ChromeDriver();
@@ -59,7 +59,7 @@ public class GenericUtils {
 		return driverList;
 	}
 
-	private static WebDriver createWebDriver(ISupplier<WebDriver> func) {
+	private static WebDriver createWebDriver(Supplier<WebDriver> func) {
 		int tryCnt = 1;
 		final int tryCntMax = SystemProperties.getInstance().getInt("config.trywebdrivercreatecount");
 
