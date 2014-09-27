@@ -1,14 +1,12 @@
 package pages.mediator;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import com.google.common.base.Supplier;
+import org.junit.*;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
@@ -16,13 +14,15 @@ import org.slf4j.LoggerFactory;
 import pages.colleague.google.GoogleColleague;
 import pages.mediator.google.GoogleMediator;
 import support.GenericUtils;
-import support.function.ISupplier;
+import support.ProcessBuilderUtils;
 import support.js.TagBean;
 
+import javax.swing.text.html.HTML;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static support.js.JsUtils.addElement;
@@ -33,6 +33,11 @@ public class MediatorTest {
 
 	@Spy
 	private GoogleMediator mediMock = new GoogleMediator();
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		ProcessBuilderUtils.killProcessIe();
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -70,21 +75,24 @@ public class MediatorTest {
 	/**
 	 * 1件取得
 	 */
+	@Ignore
 	@Test
 	public void testFindElement001() {
 		LOG.info("testFindElement001 is start");
 
-		final String TAG = "div";
+		final HTML.Tag TAG = HTML.Tag.DIV;
 		final String ID1 = "id1";
 		final String INNER1 = "inner1";
-		ISupplier<String> initElement = new ISupplier<String>() {
+		Supplier<String> initElement = new Supplier<String>() {
 			@Override
 			public String get() {
 				StringBuilder sb = new StringBuilder();
+
 				TagBean bean1 = new TagBean(TAG);
-				bean1.setId(ID1);
+				bean1.putAttributeMap(HTML.Attribute.ID, ID1);
 				bean1.setInnerHTML(INNER1);
 				sb.append(addElement(bean1));
+
 				return sb.toString();
 			}
 		};
@@ -97,35 +105,38 @@ public class MediatorTest {
 		WebElement ida = collMock.aGmail();
 		String text = ida.getAttribute("innerHTML");
 
-		Assert.assertThat(INNER1, is(text));
+		assertThat(INNER1, is(text));
 
 		LOG.info("testFindElement001 is end");
 	}
 
 	/**
-	 * 2件存在TimeoutExceptionエラー
+	 * 2件存在NoSuchElementExceptionエラー
 	 */
 	@Test
 	public void testFindElement002() {
 		LOG.info("testFindElement002 is start");
 
-		final String TAG = "input";
+		final HTML.Tag TAG = HTML.Tag.INPUT;
+		final String TAG_TYPE = "text";
 		final String NAME1 = "name1";
-		final String INNER1 = "inner1";
-		final String INNER2 = "inner2";
-		ISupplier<String> initElement = new ISupplier<String>() {
+		final String VALUE1 = "text1";
+		final String VALUE2 = "text2";
+		Supplier<String> initElement = new Supplier<String>() {
 			@Override
 			public String get() {
 				StringBuilder sb = new StringBuilder();
 
 				TagBean bean1 = new TagBean(TAG);
-				bean1.setName(NAME1);
-				bean1.setInnerHTML(INNER1);
+				bean1.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
+				bean1.putAttributeMap(HTML.Attribute.NAME, NAME1);
+				bean1.putAttributeMap(HTML.Attribute.VALUE, VALUE1);
 				sb.append(addElement(bean1));
 
 				TagBean bean2 = new TagBean(TAG);
-				bean2.setName(NAME1);
-				bean2.setInnerHTML(INNER2);
+				bean1.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
+				bean2.putAttributeMap(HTML.Attribute.NAME, NAME1);
+				bean2.putAttributeMap(HTML.Attribute.VALUE, VALUE2);
 				sb.append(addElement(bean2));
 
 				return sb.toString();
@@ -137,10 +148,12 @@ public class MediatorTest {
 
 		GoogleColleague collMock = spy(mediMock.getColleague(GoogleColleague.class));
 		try {
-			doReturn(mediMock.findElement(By.xpath("//input[@name='" + NAME1 + "']"))).when(collMock).aGmail();
+			doReturn(mediMock.findElement(By.xpath("//" + TAG + "[@name='" + NAME1 + "']"))).when(collMock).aGmail();
 			fail();
-		} catch (TimeoutException e) {
-			assertThat(e.getMessage(), is(matches("^element取得エラー")));
+		} catch (Exception e) {
+			LOG.info(e.getMessage());
+			assertThat(e, is(instanceOf(NoSuchElementException.class)));
+			assertThat(e.getMessage().startsWith("element複数件エラー"), is(true));
 		}
 
 		LOG.info("testFindElement002 is end");

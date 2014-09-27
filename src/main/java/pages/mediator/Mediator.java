@@ -1,5 +1,6 @@
 package pages.mediator;
 
+import com.google.common.base.Supplier;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
@@ -15,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.colleague.IColleague;
 import scala.Tuple2;
-import support.function.ISupplier;
 import support.properties.SystemProperties;
 
 import java.io.File;
@@ -132,7 +132,7 @@ public abstract class Mediator {
 	public WebElement findElement(final By by) {
 		List<WebElement> elementList = null;
 		WebDriverException ex = null;
-		for (ISupplier<ExpectedCondition<List<WebElement>>> func : getExpectedList(by)) {
+		for (Supplier<ExpectedCondition<List<WebElement>>> func : getExpectedList(by)) {
 			Tuple2<List<WebElement>, WebDriverException> elementListTuple = findElementList(func.get());
 			elementList = elementListTuple._1;
 			ex = elementListTuple._2;
@@ -142,6 +142,10 @@ public abstract class Mediator {
 		}
 		if (ex != null) {
 			printScreen("ERROR_" + this.getClass().getName());
+			LOG.error("-------------------------------------------------------");
+			if (ex instanceof TimeoutException) {
+				LOG.error(ex.getClass().getName() + " htmlとWebElement取得処理を再確認してください");
+			}
 			LOG.error(getHtml());
 			throw ex;
 		}
@@ -153,16 +157,16 @@ public abstract class Mediator {
 		return elementList.get(0);
 	}
 
-	private List<ISupplier<ExpectedCondition<List<WebElement>>>> getExpectedList(final By by) {
-		List<ISupplier<ExpectedCondition<List<WebElement>>>> ret = new ArrayList<>();
+	private List<Supplier<ExpectedCondition<List<WebElement>>>> getExpectedList(final By by) {
+		List<Supplier<ExpectedCondition<List<WebElement>>>> ret = new ArrayList<>();
 
-		ret.add(new ISupplier<ExpectedCondition<List<WebElement>>>() {
+		ret.add(new Supplier<ExpectedCondition<List<WebElement>>>() {
 			@Override
 			public ExpectedCondition<List<WebElement>> get() {
 				return ExpectedConditions.visibilityOfAllElementsLocatedBy(by);
 			}
 		});
-		ret.add(new ISupplier<ExpectedCondition<List<WebElement>>>() {
+		ret.add(new Supplier<ExpectedCondition<List<WebElement>>>() {
 			@Override
 			public ExpectedCondition<List<WebElement>> get() {
 				return ExpectedConditions.presenceOfAllElementsLocatedBy(by);

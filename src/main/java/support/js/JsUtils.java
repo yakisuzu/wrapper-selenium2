@@ -1,14 +1,16 @@
 package support.js;
 
+import javax.swing.text.html.HTML;
+import java.util.Map;
+
 public class JsUtils {
 	public static String addElement(TagBean bean) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("var ele = document.createElement('" + bean.getTag() + "');");
-		sb.append("ele.innerHTML = '" + bean.getInnerHTML() + "';");
-		sb.append("ele.id = '" + bean.getId() + "';");
-		sb.append("ele.name = '" + bean.getName() + "';");
-		sb.append("ele.text = '" + bean.getText() + "';");
-		sb.append("ele.onclick = '" + bean.getOnclick() + "';");
+		sb.append("var ele=document.createElement('" + bean.getTag() + "');");
+		for (Map.Entry<HTML.Attribute, String> attrMap : bean.getAttributeMap().entrySet()) {
+			sb.append("ele." + attrMap.getKey() + "='" + attrMap.getValue() + "';");
+		}
+		sb.append("ele.innerHTML='" + bean.getInnerHTML() + "';");
 		sb.append("document.body.appendChild(ele);");
 		return sb.toString();
 	}
