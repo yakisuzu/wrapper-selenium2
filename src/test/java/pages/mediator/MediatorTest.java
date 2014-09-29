@@ -1,6 +1,5 @@
 package pages.mediator;
 
-import com.google.common.base.Supplier;
 import org.junit.*;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
@@ -29,6 +28,7 @@ import static support.js.JsUtils.addElement;
 
 public class MediatorTest {
 	private static Logger LOG = LoggerFactory.getLogger(MediatorTest.class);
+	private static ClassLoader classLoader = MediatorTest.class.getClassLoader();
 	private WebDriver dri;
 
 	@Spy
@@ -41,35 +41,20 @@ public class MediatorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		LOG.info("Before is start");
-
 		MockitoAnnotations.initMocks(this);
 		dri = GenericUtils.getWebDriverList().get(0);
 		mediMock.initializeDriver(dri);
 
-		//protectedはspyできない
-		//doReturn("").when(mediMock).initializeUrl();
-
 		//private取得
 		WebDriver dri = (WebDriver) Whitebox.getInternalState(mediMock, "driver");
-		//ブランクに戻す
-		if (mediMock.isIe()) {
-			dri.navigate().back();
-		} else {
-			dri.navigate().to("");
-		}
-
-		LOG.info("Before is end");
+		//テストページ表示
+		dri.navigate().to(classLoader.getResource("testPage.html"));
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		LOG.info("After is start");
-
 		Thread.sleep(2000);
 		dri.quit();
-
-		LOG.info("After is end");
 	}
 
 	/**
@@ -78,27 +63,20 @@ public class MediatorTest {
 	@Ignore
 	@Test
 	public void testFindElement001() {
-		LOG.info("testFindElement001 is start");
+		LOG.info("start");
 
 		final HTML.Tag TAG = HTML.Tag.DIV;
 		final String ID1 = "id1";
 		final String INNER1 = "inner1";
-		Supplier<String> initElement = new Supplier<String>() {
-			@Override
-			public String get() {
-				StringBuilder sb = new StringBuilder();
-
-				TagBean bean1 = new TagBean(TAG);
-				bean1.putAttributeMap(HTML.Attribute.ID, ID1);
-				bean1.setInnerHTML(INNER1);
-				sb.append(addElement(bean1));
-
-				return sb.toString();
-			}
-		};
 
 		//test用element初期化
-		mediMock.exeJs(initElement.get());
+		{
+			TagBean bean1 = new TagBean(TAG);
+			bean1.putAttributeMap(HTML.Attribute.ID, ID1);
+			bean1.setInnerHTML(INNER1);
+
+			mediMock.exeJs(addElement(bean1));
+		}
 
 		GoogleColleague collMock = spy(mediMock.getColleague(GoogleColleague.class));
 		doReturn(mediMock.findElement(By.xpath("//" + TAG + "[@id='" + ID1 + "']"))).when(collMock).aGmail();
@@ -107,7 +85,7 @@ public class MediatorTest {
 
 		assertThat(INNER1, is(text));
 
-		LOG.info("testFindElement001 is end");
+		LOG.info("end");
 	}
 
 	/**
@@ -115,36 +93,28 @@ public class MediatorTest {
 	 */
 	@Test
 	public void testFindElement002() {
-		LOG.info("testFindElement002 is start");
+		LOG.info("start");
 
 		final HTML.Tag TAG = HTML.Tag.INPUT;
 		final String TAG_TYPE = "text";
 		final String NAME1 = "name1";
 		final String VALUE1 = "text1";
 		final String VALUE2 = "text2";
-		Supplier<String> initElement = new Supplier<String>() {
-			@Override
-			public String get() {
-				StringBuilder sb = new StringBuilder();
-
-				TagBean bean1 = new TagBean(TAG);
-				bean1.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
-				bean1.putAttributeMap(HTML.Attribute.NAME, NAME1);
-				bean1.putAttributeMap(HTML.Attribute.VALUE, VALUE1);
-				sb.append(addElement(bean1));
-
-				TagBean bean2 = new TagBean(TAG);
-				bean1.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
-				bean2.putAttributeMap(HTML.Attribute.NAME, NAME1);
-				bean2.putAttributeMap(HTML.Attribute.VALUE, VALUE2);
-				sb.append(addElement(bean2));
-
-				return sb.toString();
-			}
-		};
 
 		//test用element初期化
-		mediMock.exeJs(initElement.get());
+		{
+			TagBean bean1 = new TagBean(TAG);
+			bean1.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
+			bean1.putAttributeMap(HTML.Attribute.NAME, NAME1);
+			bean1.putAttributeMap(HTML.Attribute.VALUE, VALUE1);
+
+			TagBean bean2 = new TagBean(TAG);
+			bean2.putAttributeMap(HTML.Attribute.TYPE, TAG_TYPE);
+			bean2.putAttributeMap(HTML.Attribute.NAME, NAME1);
+			bean2.putAttributeMap(HTML.Attribute.VALUE, VALUE2);
+
+			mediMock.exeJs(addElement(bean1, bean2));
+		}
 
 		GoogleColleague collMock = spy(mediMock.getColleague(GoogleColleague.class));
 		try {
@@ -156,6 +126,6 @@ public class MediatorTest {
 			assertThat(e.getMessage().startsWith("element複数件エラー"), is(true));
 		}
 
-		LOG.info("testFindElement002 is end");
+		LOG.info("end");
 	}
 }
