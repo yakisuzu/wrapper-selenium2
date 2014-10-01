@@ -1,18 +1,18 @@
 package pages.mediator;
 
 import org.junit.*;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pages.colleague.google.GoogleColleague;
 import pages.mediator.google.GoogleMediator;
 import support.GenericUtils;
+import support.IPowerMockRun;
 import support.ProcessBuilderUtils;
 import support.js.TagBean;
 
@@ -26,13 +26,13 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static support.js.JsUtils.addElement;
 
-public class MediatorTest {
+@PrepareForTest(GoogleMediator.class)
+public class MediatorTest implements IPowerMockRun {
 	private static Logger LOG = LoggerFactory.getLogger(MediatorTest.class);
-	private static ClassLoader classLoader = MediatorTest.class.getClassLoader();
+	@SuppressWarnings("ConstantConditions")
+	private static String TEST_PAGE = MediatorTest.class.getClassLoader().getResource("testPage.html").toString();
 	private WebDriver dri;
-
-	@Spy
-	private GoogleMediator mediMock = new GoogleMediator();
+	private GoogleMediator mediMock;
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
@@ -41,14 +41,17 @@ public class MediatorTest {
 
 	@Before
 	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
+		//for @Spy
+		//MockitoAnnotations.initMocks(this);
+
+		mediMock = PowerMockito.spy(new GoogleMediator());
+		PowerMockito.doReturn(TEST_PAGE).when(mediMock, "initializeUrl");
+
 		dri = GenericUtils.getWebDriverList().get(0);
 		mediMock.initializeDriver(dri);
 
 		//private取得
-		WebDriver dri = (WebDriver) Whitebox.getInternalState(mediMock, "driver");
-		//テストページ表示
-		dri.navigate().to(classLoader.getResource("testPage.html"));
+		//WebDriver dri = (WebDriver) Whitebox.getInternalState(mediMock, "driver");
 	}
 
 	@After
@@ -116,9 +119,8 @@ public class MediatorTest {
 			mediMock.exeJs(addElement(bean1, bean2));
 		}
 
-		GoogleColleague collMock = spy(mediMock.getColleague(GoogleColleague.class));
 		try {
-			doReturn(mediMock.findElement(By.xpath("//" + TAG + "[@name='" + NAME1 + "']"))).when(collMock).aGmail();
+			mediMock.findElement(By.xpath("//" + TAG + "[@name='" + NAME1 + "']"));
 			fail();
 		} catch (Exception e) {
 			LOG.info(e.getMessage());
