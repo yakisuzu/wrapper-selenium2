@@ -53,7 +53,7 @@ public abstract class Mediator {
 
 	private void initializeSsl() {
 		if (isIe()) {
-			if (getUrl().matches("^res:\\/\\/ieframe.dll\\/invalidcert.htm\\?SSLError=.*")) {
+			if (getUrl().matches("^res://ieframe.dll/invalidcert.htm\\?SSLError=.*")) {
 				driver.navigate().to("javascript:document.getElementById('overridelink').click()");
 			}
 		}
@@ -91,8 +91,7 @@ public abstract class Mediator {
 
 	public void printScreen(String fileName) {
 		String path = "./printScreen/";
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmm");
-		String date = sdf.format(new Date());
+		String date = new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date());
 		String driverName = "";
 		if (isIe()) {
 			driverName = SystemProperties.getInstance().getString("webdriver.ie");
@@ -106,16 +105,17 @@ public abstract class Mediator {
 		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
 		try {
-			FileUtils.copyFile(screenshot, new File(path + fileName + "_" + date + "_" + driverName + "_" + no + extension));
+			FileUtils.copyFile(screenshot, new File(path + date + "_" + driverName + "_" + no + "_" + fileName + extension));
 		} catch (IOException e) {
 			LOG.error("スクリーンショットエラー", e);
 		}
 	}
 
-	public String exeJs(String js, Object... obj) {
+	@SuppressWarnings("unchecked")
+	public <R> R exeJs(String js, Object... obj) {
 		//objはarguments[0]でアクセスする
-		//jsでreturnした文字列を戻り値として受ける
-		return (String) ((JavascriptExecutor) driver).executeScript(js, obj);
+		//戻り値はjsをreturnした値
+		return (R) ((JavascriptExecutor) driver).executeScript(js, obj);
 	}
 
 	///////////////////////////////////////////////////
