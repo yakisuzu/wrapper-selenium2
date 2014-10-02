@@ -1,6 +1,5 @@
 package features;
 
-import operators.google.GoogleOperator;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +15,7 @@ public class GoogleFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
 		for (WebDriver driver : GenericUtils.getWebDriverList()) {
-			GoogleOperator ope = GoogleFeature.login(driver);
+			GoogleFeature.login(driver);
 			driver.quit();
 		}
 	}
