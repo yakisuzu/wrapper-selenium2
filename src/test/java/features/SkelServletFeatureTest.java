@@ -16,7 +16,7 @@ public class SkelServletFeatureTest {
 	@Test
 	public void testLogin() throws Exception {
 		for (WebDriver driver : GenericUtils.getWebDriverList()) {
-			SkelServletOperator ope = SkelServletFeature.winOpen(driver);
+			SkelServletFeature.winOpen(driver);
 			driver.quit();
 		}
 	}
