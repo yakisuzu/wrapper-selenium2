@@ -1,5 +1,6 @@
-package features;
+package pages.features;
 
+import features.GoogleFeature;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;

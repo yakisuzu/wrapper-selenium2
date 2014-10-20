@@ -1,6 +1,6 @@
-package features;
+package pages.features;
 
-import operators.SkelServlet.SkelServletOperator;
+import features.SkelServletFeature;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
