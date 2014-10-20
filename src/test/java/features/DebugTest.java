@@ -1,4 +1,4 @@
-package pages.features;
+package features;
 
 import org.junit.Test;
 import support.ProcessBuilderUtils;

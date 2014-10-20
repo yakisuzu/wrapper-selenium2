@@ -5,24 +5,35 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import pages.colleague.google.GoogleColleague;
 import pages.colleague.google.GoogleMailColleague;
+import pages.mediator.Mediator;
 import pages.mediator.google.GoogleMediator;
 
-public class GoogleOperator extends Operator<GoogleMediator> {
+public class GoogleOperator extends Operator {
 	public GoogleOperator(WebDriver driver) {
 		super(driver);
 	}
 
-	private GoogleColleague coll1 = getColleague(GoogleColleague.class);
-	private GoogleMailColleague coll2 = getColleague(GoogleMailColleague.class);
+	@Override
+	protected Mediator initializeMediator() {
+		return new GoogleMediator();
+	}
 
-	public void enterLogin(final String email, final String pass) {
-		coll1.aLogin().sendKeys(Keys.ENTER);
-		coll1.inputLoginEmail().sendKeys(email);
-		coll1.inputLoginPasswd().sendKeys(pass);
-		//coll1.inputLoginBtn().sendKeys(Keys.ENTER);
+	private GoogleColleague getGoogleColleague() {
+		return getColleague(GoogleColleague.class);
+	}
+
+	private GoogleMailColleague getGoogleMailColleague() {
+		return getColleague(GoogleMailColleague.class);
+	}
+
+	public void enterLogin(String email, String pass) {
+		getGoogleColleague().aLogin().sendKeys(Keys.ENTER);
+		getGoogleColleague().inputLoginEmail().sendKeys(email);
+		getGoogleColleague().inputLoginPasswd().sendKeys(pass);
+		//getGoogleColleague().inputLoginBtn().sendKeys(Keys.ENTER);
 	}
 
 	public void clickGmail() {
-		coll2.aGmail().sendKeys(Keys.ENTER);
+		getGoogleMailColleague().aGmail().sendKeys(Keys.ENTER);
 	}
 }
