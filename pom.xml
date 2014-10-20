@@ -6,7 +6,7 @@
 
     <groupId>SkelSelenium2</groupId>
     <artifactId>SkelSelenium2</artifactId>
-    <version>1.0</version>
+    <version>0.1.0</version>
 
     <build>
         <plugins>
