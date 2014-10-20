@@ -5,14 +5,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import pages.mediator.Mediator;
 
-public class Colleague<T extends Mediator> implements IColleague {
-	private T mediator;
+public class Colleague {
+	private Mediator mediator;
 
-	private Colleague() {
-	}
-
-	public Colleague(T mediator) {
-		this();
+	public Colleague(Mediator mediator) {
 		this.mediator = mediator;
 	}
 

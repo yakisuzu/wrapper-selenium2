@@ -2,10 +2,10 @@ package pages.colleague.google;
 
 import org.openqa.selenium.WebElement;
 import pages.colleague.Colleague;
-import pages.mediator.google.GoogleMediator;
+import pages.mediator.Mediator;
 
-public class GoogleColleague extends Colleague<GoogleMediator> {
-	public GoogleColleague(GoogleMediator mediator) {
+public class GoogleColleague extends Colleague {
+	public GoogleColleague(Mediator mediator) {
 		super(mediator);
 	}
 

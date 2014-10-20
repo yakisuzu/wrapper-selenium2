@@ -1,9 +1,9 @@
 package pages.colleague.google;
 
-import pages.mediator.google.GoogleMediator;
+import pages.mediator.Mediator;
 
 public class GoogleMailColleague extends GoogleColleague {
-	public GoogleMailColleague(GoogleMediator mediator) {
+	public GoogleMailColleague(Mediator mediator) {
 		super(mediator);
 	}
 }

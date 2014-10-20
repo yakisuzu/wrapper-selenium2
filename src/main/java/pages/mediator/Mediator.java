@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.colleague.IColleague;
+import pages.colleague.Colleague;
 import scala.Tuple2;
 import support.properties.SystemProperties;
 
@@ -26,11 +26,13 @@ import java.util.*;
 public abstract class Mediator {
 	protected abstract String initializeUrl();
 
+	protected abstract List<Colleague> initializeColleagueList();
+
 	private static Logger LOG = LoggerFactory.getLogger(Mediator.class);
 	private WebDriver driver;
 	private Wait<WebDriver> wdriver;
 	private Actions action;
-	private Map<Class<? extends IColleague>, IColleague> colleagueMap;
+	private Map<Class<? extends Colleague>, Colleague> colleagueMap;
 	private int printNo;
 
 	///////////////////////////////////////////////////
@@ -41,29 +43,26 @@ public abstract class Mediator {
 		printNo = 1;
 	}
 
-	public void initializeDriver(WebDriver driver) {
+	public void initialize(WebDriver driver) {
+		// driver
 		this.driver = driver;
-		this.driver.navigate().to(initializeUrl());
-		initializeSsl();
-
 		wdriver = new WebDriverWait(driver, SystemProperties.getInstance().getInt("config.tryelementfindtime"));
-
 		action = new Actions(driver);
-	}
 
-	private void initializeSsl() {
+		// colleague
+		for (Colleague coll : initializeColleagueList()) {
+			colleagueMap.put(coll.getClass(), coll);
+		}
+
+		// url
+		this.driver.navigate().to(initializeUrl());
+
+		// ssl
 		if (isIe()) {
 			if (getUrl().matches("^res://ieframe.dll/invalidcert.htm\\?SSLError=.*")) {
 				driver.navigate().to("javascript:document.getElementById('overridelink').click()");
 			}
 		}
-	}
-
-	///////////////////////////////////////////////////
-	//for mediator
-	///////////////////////////////////////////////////
-	protected void addColleague(IColleague colleague) {
-		colleagueMap.put(colleague.getClass(), colleague);
 	}
 
 	///////////////////////////////////////////////////
@@ -122,7 +121,7 @@ public abstract class Mediator {
 	//for operators
 	///////////////////////////////////////////////////
 	@SuppressWarnings("unchecked")
-	public <T extends IColleague> T getColleague(Class<T> key) {
+	public <T extends Colleague> T getColleague(Class<T> key) {
 		return (T) colleagueMap.get(key);
 	}
 

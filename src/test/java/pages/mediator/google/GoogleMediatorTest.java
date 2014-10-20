@@ -1,97 +1,37 @@
-package pages.mediator;
+package pages.mediator.google;
 
-import operators.Operator;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pages.colleague.Colleague;
+import pages.colleague.google.GoogleColleague;
 import support.GenericUtils;
+import support.IPowerMockRun;
 import support.ProcessBuilderUtils;
 import support.js.TagBean;
 
 import javax.swing.text.html.HTML;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static support.js.JsUtils.addElement;
 
-public class MediatorTest {
-	private static Logger LOG = LoggerFactory.getLogger(MediatorTest.class);
+@PrepareForTest(GoogleMediator.class)
+public class GoogleMediatorTest implements IPowerMockRun {
+	private static Logger LOG = LoggerFactory.getLogger(GoogleMediatorTest.class);
+	@SuppressWarnings("ConstantConditions")
+	private static String TEST_PAGE = GoogleMediatorTest.class.getClassLoader().getResource("testPage.html").toString();
 	private WebDriver dri;
-	private TestOperator ope;
-
-	/**
-	 * Operator
-	 */
-	private class TestOperator extends Operator {
-		public TestOperator(WebDriver driver) {
-			super(driver);
-		}
-
-		@Override
-		protected Mediator initializeMediator() {
-			return new TestMediator();
-		}
-
-		public TestColleague getTestColleague() {
-			return getColleague(TestColleague.class);
-		}
-
-		public <R> R exeJsAddElement(TagBean... beanArray) {
-			return getMediator().exeJs(addElement(beanArray));
-		}
-
-		public WebElement getElement() {
-			return null;
-		}
-	}
-
-	/**
-	 * Mediator
-	 */
-	private class TestMediator extends Mediator {
-		@SuppressWarnings("ConstantConditions")
-		@Override
-		protected String initializeUrl() {
-			return this.getClass().getClassLoader().getResource("testPage.html").toString();
-		}
-
-		@Override
-		protected List<Colleague> initializeColleagueList() {
-			List<Colleague> ret = new ArrayList<>();
-			ret.add(new TestColleague(this));
-			return ret;
-		}
-	}
-
-	/**
-	 * Colleague
-	 */
-	private class TestColleague extends Colleague {
-		public TestColleague(Mediator mediator) {
-			super(mediator);
-		}
-
-		public WebElement getElement001() {
-			return findXpath("//div[@id='id1']");
-		}
-
-		public WebElement getElement002() {
-			return findXpath("//input[@name='name1']");
-		}
-	}
+	private GoogleMediator mediMock;
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
@@ -100,8 +40,17 @@ public class MediatorTest {
 
 	@Before
 	public void setUp() throws Exception {
+		//for @Spy
+		//MockitoAnnotations.initMocks(this);
+
+		mediMock = PowerMockito.spy(new GoogleMediator());
+		PowerMockito.doReturn(TEST_PAGE).when(mediMock, "initializeUrl");
+
 		dri = GenericUtils.getWebDriverList().get(0);
-		ope = Mockito.spy(new TestOperator(dri));
+		mediMock.initialize(dri);
+
+		//private取得
+		//WebDriver dri = (WebDriver) Whitebox.getInternalState(mediMock, "driver");
 	}
 
 	@After
@@ -113,6 +62,7 @@ public class MediatorTest {
 	/**
 	 * 1件取得
 	 */
+	@Ignore
 	@Test
 	public void testFindElement001() {
 		LOG.info("start");
@@ -127,15 +77,13 @@ public class MediatorTest {
 			bean1.putAttributeMap(HTML.Attribute.ID, ID1);
 			bean1.setInnerHTML(INNER1);
 
-			ope.exeJsAddElement(bean1);
+			mediMock.exeJs(addElement(bean1));
 		}
 
-		//spy
-		{
-			WebElement ret = ope.getTestColleague().getElement001();
-			doReturn(ret).when(ope).getElement();
-		}
-		String text = ope.getElement().getAttribute("innerHTML");
+		GoogleColleague collMock = spy(mediMock.getColleague(GoogleColleague.class));
+		doReturn(mediMock.findElement(By.xpath("//" + TAG + "[@id='" + ID1 + "']"))).when(collMock).aGmail();
+		WebElement ida = collMock.aGmail();
+		String text = ida.getAttribute("innerHTML");
 
 		assertThat(INNER1, is(text));
 
@@ -167,11 +115,11 @@ public class MediatorTest {
 			bean2.putAttributeMap(HTML.Attribute.NAME, NAME1);
 			bean2.putAttributeMap(HTML.Attribute.VALUE, VALUE2);
 
-			ope.exeJsAddElement(bean1, bean2);
+			mediMock.exeJs(addElement(bean1, bean2));
 		}
 
 		try {
-			ope.getTestColleague().getElement002();
+			mediMock.findElement(By.xpath("//" + TAG + "[@name='" + NAME1 + "']"));
 			fail();
 		} catch (Exception e) {
 			LOG.info(e.getMessage());
