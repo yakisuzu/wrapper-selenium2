@@ -43,11 +43,11 @@ public abstract class Mediator {
 		printNo = 1;
 	}
 
-	public void initialize(WebDriver driver) {
+	public void initialize(WebDriver initDriver) {
 		// driver
-		this.driver = driver;
-		wdriver = new WebDriverWait(driver, SystemProperties.getInstance().getInt("config.tryelementfindtime"));
-		action = new Actions(driver);
+		driver = initDriver;
+		wdriver = new WebDriverWait(initDriver, SystemProperties.getInstance().getInt("config.tryelementfindtime"));
+		action = new Actions(initDriver);
 
 		// colleague
 		for (Colleague coll : initializeColleagueList()) {
@@ -55,7 +55,7 @@ public abstract class Mediator {
 		}
 
 		// url
-		this.driver.navigate().to(initializeUrl());
+		driver.navigate().to(initializeUrl());
 
 		// ssl
 		if (isIe()) {
@@ -88,6 +88,14 @@ public abstract class Mediator {
 		return driver.getPageSource();
 	}
 
+	protected File getScreenShotFile() {
+		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+	}
+
+	protected byte[] getScreenShotByteArray() {
+		return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+	}
+
 	public void printScreen(String fileName) {
 		String path = "./printScreen/";
 		String date = new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date());
@@ -101,10 +109,9 @@ public abstract class Mediator {
 		}
 		String no = String.format("%1$04d", printNo++);
 		String extension = ".bmp";
-		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 
 		try {
-			FileUtils.copyFile(screenshot, new File(path + date + "_" + driverName + "_" + no + "_" + fileName + extension));
+			FileUtils.copyFile(getScreenShotFile(), new File(path + date + "_" + driverName + "_" + no + "_" + fileName + extension));
 		} catch (IOException e) {
 			LOG.error("スクリーンショットエラー", e);
 		}
@@ -128,7 +135,7 @@ public abstract class Mediator {
 	///////////////////////////////////////////////////
 	//for colleague
 	///////////////////////////////////////////////////
-	public WebElement findElement(final By by) {
+	public WebElement findElement(By by) {
 		List<WebElement> elementList = null;
 		WebDriverException ex = null;
 		for (Supplier<ExpectedCondition<List<WebElement>>> func : getExpectedList(by)) {

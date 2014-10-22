@@ -25,6 +25,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <poi.version>3.10-FINAL</poi.version>
         <powermock.version>1.5.6</powermock.version>
         <slf4j.version>1.7.7</slf4j.version>
     </properties>
@@ -46,10 +47,16 @@
             <artifactId>scala-library</artifactId>
             <version>2.11.2</version>
         </dependency>
+        <!-- poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.10.1</version>
+            <version>${poi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
         </dependency>
         <!-- log -->
         <dependency>

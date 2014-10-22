@@ -29,7 +29,10 @@ import static support.js.JsUtils.addElement;
 
 public class MediatorTest {
 	private static Logger LOG = LoggerFactory.getLogger(MediatorTest.class);
-	private WebDriver dri;
+	private static WebDriver dri = GenericUtils.getWebDriverList().get(0);
+	@SuppressWarnings("ConstantConditions")
+	private static String TEST_PAGE = MediatorTest.class.getClassLoader().getResource("testPage.html").toString();
+
 	private TestOperator ope;
 
 	/**
@@ -49,8 +52,8 @@ public class MediatorTest {
 			return getColleague(TestColleague.class);
 		}
 
-		public <R> R exeJsAddElement(TagBean... beanArray) {
-			return getMediator().exeJs(addElement(beanArray));
+		public void exeJsAddElement(TagBean... beanArray) {
+			getMediator().exeJs(addElement(beanArray));
 		}
 
 		public WebElement getElement() {
@@ -62,10 +65,9 @@ public class MediatorTest {
 	 * Mediator
 	 */
 	private class TestMediator extends Mediator {
-		@SuppressWarnings("ConstantConditions")
 		@Override
 		protected String initializeUrl() {
-			return this.getClass().getClassLoader().getResource("testPage.html").toString();
+			return TEST_PAGE;
 		}
 
 		@Override
@@ -95,19 +97,18 @@ public class MediatorTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		dri.quit();
 		ProcessBuilderUtils.killProcessIe();
 	}
 
 	@Before
 	public void setUp() throws Exception {
-		dri = GenericUtils.getWebDriverList().get(0);
 		ope = Mockito.spy(new TestOperator(dri));
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		Thread.sleep(2000);
-		dri.quit();
 	}
 
 	/**
